@@ -12,7 +12,7 @@ function RectanglePleinArondie(x, y, l, h, r, c){
 }
 
 function collide(x,y,l,h){
-  if((x <= mouseX) && (mouseX <= x+h) && (y <= mouseY) && (mouseY <= y+l) ){
+  if((x <= mouseX) && (mouseX <= x+l) && (y <= mouseY) && (mouseY <= y+h) ){
     return true;
   }
   else{
