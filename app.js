@@ -1,4 +1,4 @@
-function RectanglePleinArondie(x, y, l, h, r, c) {
+function RectanglePleinArrondie(x, y, l, h, r, c) {
   RectanglePlein(x, y + r, l, h - r * 2, c);
   RectanglePlein(x + r, y, l - r * 2, h, c);
 
@@ -16,9 +16,19 @@ function collide(x, y, l, h) {
   }
 }
 
+function rectangle(x, y, length, height, radius, color){
+  obj = {
+    "x":x,
+  "y":y,
+  "length":length,
+  "height": height,
+  "radius":radius,
+  "color": color,
+  draw : RectanglePleinArrondie(this)};
+}
+
 
 var boucle_jeu = null;
-
 
 function mon_jeu() {
     boucle_jeu = setInterval(function() {
