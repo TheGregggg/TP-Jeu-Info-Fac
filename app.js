@@ -69,7 +69,7 @@ function draw_menu() {
 function draw_game() {
   if (game_state == "player_turn") {
     setCanvasFont("helvetica", window_width * 0.02 + "pt", "bold");
-    Texte(100, window_height / 2 - 100, "Votre Tour", "purple");
+    Texte(window_width / 2 - 100, 50, "Votre Tour", "purple");
   }
 
 }
@@ -81,21 +81,29 @@ function game() {
   game_loop = setInterval(function() {
     //drawings
     ctx.clearRect(0, 0, window_width, window_height);
+
     if (game_state == "menu") {
       draw_menu();
+
+      //interactions
+      if (rect_play_button.collide_with_mouse() && mouse_clicked) {
+        game_state = "player_turn";
+      }
+
     } else if (game_state == "player_turn" || game_state == "enemy_turn") {
       draw_game();
+
+      //interactions
     }
 
     rect_fin_jeu.draw();
 
-    //interactions
+
     if (rect_fin_jeu.collide_with_mouse() && mouse_clicked) {
       rect_fin_jeu.color = "blue";
       rect_fin_jeu.draw();
       clearInterval(game_loop);
     }
-
 
     mouse_clicked = false;
   }, 1000 / 60);
