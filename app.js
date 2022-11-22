@@ -6,19 +6,10 @@ Initialiser();
 
 function rectangle(x, y, length, height, radius, color) {
   var RectanglePleinArrondie = function() {
-    RectanglePlein(
-    this.x, this.y + this.radius, this.length, this.height - this.radius * 2, this.color);
-    RectanglePlein(
-    this.x + this.radius, this.y, this.length - this.radius * 2, this.height, this.color);
-
-    CerclePlein(
-    this.x + this.radius, this.y + this.radius, this.radius * 2, this.color);
-    CerclePlein(
-    this.x + this.length - this.radius, this.y + this.radius, this.radius * 2, this.color);
-    CerclePlein(
-    this.x + this.radius, this.y + this.height - this.radius, this.radius * 2, this.color);
-    CerclePlein(
-    this.x + this.length - this.radius, this.y + this.height - this.radius, this.radius * 2, this.color);
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.roundRect(this.x, this.y, this.length, this.height, this.radius);
+    ctx.fill();
   };
 
   var collide = function() {
@@ -43,7 +34,7 @@ function rectangle(x, y, length, height, radius, color) {
   return obj;
 }
 
-function MouseClick(x,y){
+function MouseClick(x, y) {
   mouse_clicked = true;
 }
 
@@ -59,11 +50,20 @@ var game_state = "menu";
 
 
 var background_menu = PreloadImage('https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/portals_3/H2x1_CharacterHub_InazumaEleven_image1600w.jpg');
+var rect_play_button = rectangle(window_width / 2 - 100, window_height / 2 - 50, 200, 100, 20, rgba(0, 0, 0, 0.2));
 
 function draw_menu() {
   DrawImageObject(background_menu, 0, 0, window_width, window_height);
+
+
+  rect_play_button.color = rgba(0, 0, 0, 0.2);
+  if (rect_play_button.collide_with_mouse()) {
+    rect_play_button.color = rgba(0, 0, 0, 0.4);
+  }
+  rect_play_button.draw();
+
   setCanvasFont("helvetica", window_width * 0.02 + "pt", "bold");
-  Texte(window_width / 2 - 100, window_height / 2 - 100, "Jouer", "purple");
+  Texte(window_width / 2 - 70, window_height / 2 + 15, "Jouer", "white");
 }
 
 function draw_game() {
@@ -95,9 +95,9 @@ function game() {
       rect_fin_jeu.draw();
       clearInterval(game_loop);
     }
-	
-	
-	mouse_clicked = false;
+
+
+    mouse_clicked = false;
   }, 1000 / 60);
 }
 
