@@ -1,8 +1,9 @@
 // init algoscript
-turtleEnabled=false;
+turtleEnabled = false;
 Initialiser();
 
 // 'POO' définitions
+
 function rectangle(x, y, length, height, radius, color) {
   var RectanglePleinArrondie = function() {
     RectanglePlein(
@@ -42,8 +43,14 @@ function rectangle(x, y, length, height, radius, color) {
   return obj;
 }
 
+function MouseClick(x,y){
+  mouse_clicked = true;
+}
+
 // variables definitions
-var gmae_loop = null;
+var mouse_clicked = null;
+
+var game_loop = null;
 var window_height = ctx.canvas.height;
 var window_width = ctx.canvas.width;
 var rect_fin_jeu = rectangle(window_width - 30, window_height - 30, 30, 30, 0, "red");
@@ -54,18 +61,24 @@ var game_state = "menu";
 var background_menu = PreloadImage('https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/portals_3/H2x1_CharacterHub_InazumaEleven_image1600w.jpg');
 
 function draw_menu() {
-  DrawImageObject(background_menu,0,0,window_width,window_height);
-  setCanvasFont("helvetica", window_width*0.02 + "pt", "bold");
-  Texte(window_width/2 - 100, window_height/2 -100, "Jouer", "purple");
+  DrawImageObject(background_menu, 0, 0, window_width, window_height);
+  setCanvasFont("helvetica", window_width * 0.02 + "pt", "bold");
+  Texte(window_width / 2 - 100, window_height / 2 - 100, "Jouer", "purple");
 }
 
-function draw_game() {}
+function draw_game() {
+  if (game_state == "player_turn") {
+    setCanvasFont("helvetica", window_width * 0.02 + "pt", "bold");
+    Texte(100, window_height / 2 - 100, "Votre Tour", "purple");
+  }
 
+}
 
 
 // main loop
+
 function game() {
-  gmae_loop = setInterval(function() {
+  game_loop = setInterval(function() {
     //drawings
     ctx.clearRect(0, 0, window_width, window_height);
     if (game_state == "menu") {
@@ -73,20 +86,19 @@ function game() {
     } else if (game_state == "player_turn" || game_state == "enemy_turn") {
       draw_game();
     }
-    
+
     rect_fin_jeu.draw();
-    
+
     //interactions
-    if (rect_fin_jeu.collide_with_mouse()) {
+    if (rect_fin_jeu.collide_with_mouse() && mouse_clicked) {
       rect_fin_jeu.color = "blue";
       rect_fin_jeu.draw();
-      clearInterval(gmae_loop);
+      clearInterval(game_loop);
     }
-
-    
-    
+	
+	
+	mouse_clicked = false;
   }, 1000 / 60);
 }
 
 game();
-
