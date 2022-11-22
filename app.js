@@ -1,3 +1,7 @@
+// init algoscript
+turtleEnabled=false;
+Initialiser();
+
 // 'POO' définitions
 function rectangle(x, y, length, height, radius, color) {
   var RectanglePleinArrondie = function() {
@@ -46,28 +50,43 @@ var rect_fin_jeu = rectangle(window_width - 30, window_height - 30, 30, 30, 0, "
 
 var game_state = "menu";
 
-function draw_menu() {}
+
+var background_menu = PreloadImage('https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/portals_3/H2x1_CharacterHub_InazumaEleven_image1600w.jpg');
+
+function draw_menu() {
+  DrawImageObject(background_menu,0,0,window_width,window_height);
+  setCanvasFont("helvetica", window_width*0.02 + "pt", "bold");
+  Texte(window_width/2 - 100, window_height/2 -100, "Jouer", "purple");
+}
 
 function draw_game() {}
+
+
 
 // main loop
 function game() {
   gmae_loop = setInterval(function() {
-    //interactions
-    if (rect_fin_jeu.collide_with_mouse()) {
-      rect_fin_jeu.color = "blue";
-      clearInterval(gmae_loop);
-    }
-
     //drawings
-    rect_fin_jeu.draw();
-
+    ctx.clearRect(0, 0, window_width, window_height);
     if (game_state == "menu") {
       draw_menu();
     } else if (game_state == "player_turn" || game_state == "enemy_turn") {
       draw_game();
     }
+    
+    rect_fin_jeu.draw();
+    
+    //interactions
+    if (rect_fin_jeu.collide_with_mouse()) {
+      rect_fin_jeu.color = "blue";
+      rect_fin_jeu.draw();
+      clearInterval(gmae_loop);
+    }
+
+    
+    
   }, 1000 / 60);
 }
 
 game();
+
