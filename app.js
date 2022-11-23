@@ -4,17 +4,17 @@ Initialiser();
 
 // 'POO' définitions
 
-function rectangle(x, y, length, height, radius, color) {
+function rectangle(x, y, width, height, radius, color) {
   var RectanglePleinArrondie = function() {
     ctx.fillStyle = this.color;
     ctx.beginPath();
-    ctx.roundRect(this.x, this.y, this.length, this.height, this.radius);
+    ctx.roundRect(this.x, this.y, this.width, this.height, this.radius);
     ctx.fill();
   };
 
   var collide = function() {
     if (
-    this.x <= mouseX && mouseX <= this.x + this.length && this.y <= mouseY && mouseY <= this.y + this.height) {
+    this.x <= mouseX && mouseX <= this.x + this.width && this.y <= mouseY && mouseY <= this.y + this.height) {
       return true;
     } else {
       return false;
@@ -24,7 +24,7 @@ function rectangle(x, y, length, height, radius, color) {
   obj = {
     x: x,
     y: y,
-    length: length,
+    width: width,
     height: height,
     radius: radius,
     color: color,
@@ -33,14 +33,20 @@ function rectangle(x, y, length, height, radius, color) {
   };
   return obj;
 }
-
-function personnages(x, y, lenght, width, nbImage) {
+function personnages(x, y, height, width, nbImage) {
   var draw = function() {
-    if (is_compressed = true) {
-      this.width -= 50;  
+    if (is_compressed == true) {
+      DrawImageObject(this.nbImage, this.x, this.y + 10, this.height, this.width - 10); 
     }
-    DrawImageObject(nbImage, x, y, lenght, width);
-  }
+    else{
+      DrawImageObject(this.nbImage, this.x, this.y, this.height, this.width);
+    }
+    
+  };
+  
+  var anim = function () {
+		this.is_compressed = !this.is_compressed;
+	};
 
   obj = {
     x : x,
@@ -48,11 +54,9 @@ function personnages(x, y, lenght, width, nbImage) {
     length: length,
     width : width,
     nbImage : nbImage,
-    is_compressed : false,
-    anim: setInterval(function () {
-    console.log("oui")
-  }, 1000) 
+    is_compressed : false
   };
+  obj.anim = setInterval(anim.bind(obj), 1000);
 
   return obj;
 }
@@ -99,7 +103,7 @@ function draw_game() {
 
 
 // main loop
-
+// penser a clear les intervalles des joueurs !!!!!!!!!!!!!!
 function game() {
   game_loop = setInterval(function() {
     //drawings
