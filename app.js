@@ -33,28 +33,28 @@ function rectangle(x, y, width, height, radius, color) {
   };
   return obj;
 }
+
 function personnages(x, y, height, width, nbImage) {
   var draw = function() {
     if (is_compressed == true) {
-      DrawImageObject(this.nbImage, this.x, this.y + 10, this.height, this.width - 10); 
-    }
-    else{
+      DrawImageObject(this.nbImage, this.x, this.y + 10, this.height, this.width - 10);
+    } else {
       DrawImageObject(this.nbImage, this.x, this.y, this.height, this.width);
     }
-    
+
   };
-  
-  var anim = function () {
-		this.is_compressed = !this.is_compressed;
-	};
+
+  var anim = function() {
+    this.is_compressed = !this.is_compressed;
+  };
 
   obj = {
-    x : x,
-    y : y, 
+    x: x,
+    y: y,
     length: length,
-    width : width,
-    nbImage : nbImage,
-    is_compressed : false
+    width: width,
+    nbImage: nbImage,
+    is_compressed: false
   };
   obj.anim = setInterval(anim.bind(obj), 1000);
 
@@ -79,6 +79,9 @@ var game_state = "menu";
 var background_menu = PreloadImage('https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/portals_3/H2x1_CharacterHub_InazumaEleven_image1600w.jpg');
 var rect_play_button = rectangle(window_width / 2 - 100, window_height / 2 - 50, 200, 100, 20, rgba(0, 0, 0, 0.2));
 
+var players_images = PreloadImage(readFile('Data/persos.png'));
+
+
 function draw_menu() {
   DrawImageObject(background_menu, 0, 0, window_width, window_height);
 
@@ -94,6 +97,8 @@ function draw_menu() {
 }
 
 function draw_game() {
+  ctx.drawImage(players_images,0,0,38,62,0,0, 38,62);
+  
   if (game_state == "player_turn") {
     setCanvasFont("helvetica", window_width * 0.02 + "pt", "bold");
     Texte(window_width / 2 - 100, 50, "Votre Tour", "purple");
@@ -104,6 +109,8 @@ function draw_game() {
 
 // main loop
 // penser a clear les intervalles des joueurs !!!!!!!!!!!!!!
+
+
 function game() {
   game_loop = setInterval(function() {
     //drawings
