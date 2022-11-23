@@ -34,6 +34,29 @@ function rectangle(x, y, length, height, radius, color) {
   return obj;
 }
 
+function personnages(x, y, lenght, width, nbImage) {
+  var draw = function() {
+    if (is_compressed = true) {
+      this.width -= 50;  
+    }
+    DrawImageObject(nbImage, x, y, lenght, width);
+  }
+
+  obj = {
+    x : x,
+    y : y, 
+    length: length,
+    width : width,
+    nbImage : nbImage,
+    is_compressed : false,
+    anim: setInterval(function () {
+    console.log("oui")
+  }, 1000) 
+  };
+
+  return obj;
+}
+
 function MouseClick(x, y) {
   mouse_clicked = true;
 }
