@@ -21,7 +21,7 @@ function rectangle(x, y, width, height, radius, color) {
     }
   };
 
-  obj = {
+  var obj = {
     x: x,
     y: y,
     width: width,
@@ -34,12 +34,12 @@ function rectangle(x, y, width, height, radius, color) {
   return obj;
 }
 
-function personnages(x, y, height, width, nbImage) {
+function personnages(x, y, nbImage) {
   var draw = function() {
-    if (is_compressed == true) {
-      DrawImageObject(this.nbImage, this.x, this.y + 10, this.height, this.width - 10);
+    if (this.is_compressed == true) {
+      ctx.drawImage(players_images, 38 * (this.nbImage - 1), 0, 38, 62, this.x, this.y + 4, 38, 62 - 4);
     } else {
-      DrawImageObject(this.nbImage, this.x, this.y, this.height, this.width);
+      ctx.drawImage(players_images, 38 * (this.nbImage - 1), 0, 38, 62, this.x, this.y, 38, 62);
     }
 
   };
@@ -48,15 +48,20 @@ function personnages(x, y, height, width, nbImage) {
     this.is_compressed = !this.is_compressed;
   };
 
-  obj = {
+  var obj = {
     x: x,
     y: y,
-    length: length,
-    width: width,
     nbImage: nbImage,
-    is_compressed: false
+    is_compressed: false,
+    draw: draw
+
   };
-  obj.anim = setInterval(anim.bind(obj), 1000);
+
+  var createAnimInterval = function() {
+    obj.anim = setInterval(anim.bind(obj), 500);
+  };
+  setTimeout(createAnimInterval.bind(obj), Hasard(1000));
+
 
   return obj;
 }
@@ -96,9 +101,16 @@ function draw_menu() {
   Texte(window_width / 2 - 70, window_height / 2 + 15, "Jouer", "white");
 }
 
+var players = [];
+for (i = 1; i <= 10; i++) {
+  players.push(personnages(100 * i, 100, i));
+}
+
 function draw_game() {
-  ctx.drawImage(players_images,0,0,38,62,0,0, 38,62);
-  
+  players.forEach(function(player) {
+    player.draw();
+  });
+
   if (game_state == "player_turn") {
     setCanvasFont("helvetica", window_width * 0.02 + "pt", "bold");
     Texte(window_width / 2 - 100, 50, "Votre Tour", "purple");
@@ -109,7 +121,6 @@ function draw_game() {
 
 // main loop
 // penser a clear les intervalles des joueurs !!!!!!!!!!!!!!
-
 
 function game() {
   game_loop = setInterval(function() {
