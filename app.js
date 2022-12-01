@@ -120,7 +120,6 @@ function draw_game() {
 
 
 // main loop
-// penser a clear les intervalles des joueurs !!!!!!!!!!!!!!
 
 function game() {
   game_loop = setInterval(function() {
@@ -147,6 +146,12 @@ function game() {
     if (rect_fin_jeu.collide_with_mouse() && mouse_clicked) {
       rect_fin_jeu.color = "blue";
       rect_fin_jeu.draw();
+
+      players.forEach(function(player) {
+        clearInterval(player.anim);
+      });
+
+
       clearInterval(game_loop);
     }
 
