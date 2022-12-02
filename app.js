@@ -172,10 +172,10 @@ function draw_game() {
 
   if (game_state == "player_turn") {
     setCanvasFont("helvetica", window_width * 0.02 + "pt", "bold");
-    Texte(window_width / 2 - 100, 50, "Votre Tour", "purple");
+    Texte(window_width / 2 - 100, 50, "Votre Tour", rgb(219, 118, 75));
   }
   setCanvasFont("helvetica", window_width * 0.02 + "pt", "bold");
-  Texte(window_width*0.03, window_height - 50, hisastu, "white");
+  Texte(blue_fire_tiles.sprite_width*0.8/2 - window_width * 0.02 / 2, window_height - 50, hisastu, rgb(219, 118, 75));
 }
 
 // main loop
