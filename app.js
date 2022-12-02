@@ -47,7 +47,7 @@ function animated_tilemap(image, nb_images) {
 function animated_sprite(tilemap, x, y, rel_size, refresh_rate) {
   var draw = function() {
     ctx.drawImage(
-    this.tilemap.image, this.tilemap.sprite_width * this.current_frame, 0, this.tilemap.sprite_width, this.tilemap.sprite_height, this.x, this.y, this.tilemap.sprite_width*this.rel_size, this.tilemap.sprite_height*this.rel_size);
+    this.tilemap.image, this.tilemap.sprite_width * this.current_frame, 0, this.tilemap.sprite_width, this.tilemap.sprite_height, this.x, this.y, this.tilemap.sprite_width * this.rel_size, this.tilemap.sprite_height * this.rel_size);
   };
 
   var anim = function() {
@@ -122,21 +122,25 @@ var background_menu = PreloadImage("https://fs-prod-cdn.nintendo-europe.com/medi
 var rect_play_button = rectangle(
 window_width / 2 - 100, window_height / 2 - 50, 200, 100, 20, rgba(0, 0, 0, 0.2));
 
-var players_images = PreloadImage(readFile("Data/persos.png"));
-var players = [];
-players.push(personnages(window_width / 3,  window_height / 2 - 35, 1));
-players.push(personnages(window_width / 3 - 50,  window_height / 2, 2));
-players.push(personnages(window_width / 3 + 50,  window_height / 2, 3));
-players.push(personnages(window_width / 3,  window_height / 2 + 35, 4));
+var background_game = PreloadImage(readFile("Data/background.jpg"));
 
-players.push(personnages(window_width*2 / 3,  window_height / 2 - 35, 6));
-players.push(personnages(window_width*2 / 3 - 50,  window_height / 2, 7));
-players.push(personnages(window_width*2 / 3 + 50,  window_height / 2, 8));
-players.push(personnages(window_width*2 / 3,  window_height / 2 + 35, 9));
+var players_images = PreloadImage(readFile("Data/persos.png"));
+var rel_player_x = window_height * 1.75 / 3;
+var rel_player_y = window_width / 3;
+var players = [];
+players.push(personnages(rel_player_y, rel_player_x - 35, 1));
+players.push(personnages(rel_player_y - 50, rel_player_x, 2));
+players.push(personnages(rel_player_y + 50, rel_player_x, 3));
+players.push(personnages(rel_player_y, rel_player_x + 35, 4));
+
+players.push(personnages(rel_player_y * 2, rel_player_x - 35, 6));
+players.push(personnages(rel_player_y * 2 - 50, rel_player_x, 7));
+players.push(personnages(rel_player_y * 2 + 50, rel_player_x, 8));
+players.push(personnages(rel_player_y * 2, rel_player_x + 35, 9));
 
 var blue_fire_img = PreloadImage(readFile("Data/blue-fire.png"));
 var blue_fire_tiles = animated_tilemap(blue_fire_img, 6);
-var blue_fire = animated_sprite(blue_fire_tiles,  0,  window_height - blue_fire_img.height*0.8 - 10, 0.8, 120);
+var blue_fire = animated_sprite(blue_fire_tiles, 0, window_height - blue_fire_img.height * 0.8 - 10, 0.8, 120);
 
 // Game variables defintions
 var health = 40;
@@ -158,19 +162,19 @@ function draw_menu() {
 }
 
 function draw_game() {
+  DrawImageObject(background_game, 0, 0, window_width, window_height);
+
   players.forEach(function(player) {
     player.draw();
   });
-  
+
   blue_fire.draw();
-  
-  setCanvasFont("helvetica", window_width * 0.02 + "pt", "bold");
-  Texte(window_width*0.03, window_height, "10", "black");
 
   if (game_state == "player_turn") {
     setCanvasFont("helvetica", window_width * 0.02 + "pt", "bold");
-    Texte(window_width*0.03, window_height - 50, "10", "blue");
+    Texte(window_width / 2 - 100, 50, "Votre Tour", "purple");
   }
+  setCanvasFont("helvetica", window_width * 0.02 + "pt", "bold");
   Texte(window_width*0.03, window_height - 50, hisastu, "white");
 }
 
@@ -203,7 +207,7 @@ function game() {
       players.forEach(function(player) {
         clearInterval(player.anim);
       });
-
+      clearInterval(blue_fire.anim);
       clearInterval(game_loop);
     }
 
