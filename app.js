@@ -171,6 +171,7 @@ function draw_game() {
     setCanvasFont("helvetica", window_width * 0.02 + "pt", "bold");
     Texte(window_width*0.03, window_height - 50, "10", "blue");
   }
+  Texte(window_width*0.03, window_height - 50, hisastu, "white");
 }
 
 // main loop
