@@ -2,6 +2,8 @@
 turtleEnabled = false;
 Initialiser();
 
+var font = PreloadGooglefont("'Audiowide', cursive");
+
 // 'POO' définitions
 
 function rectangle(x, y, width, height, radius, color) {
@@ -157,7 +159,7 @@ function draw_menu() {
   }
   rect_play_button.draw();
 
-  setCanvasFont("helvetica", window_width * 0.02 + "pt", "bold");
+  setCanvasFont(font, window_width * 0.02 + "pt", "bold");
   Texte(window_width / 2 - 70, window_height / 2 + 15, "Jouer", "white");
 }
 
@@ -171,10 +173,10 @@ function draw_game() {
   blue_fire.draw();
 
   if (game_state == "player_turn") {
-    setCanvasFont("helvetica", window_width * 0.02 + "pt", "bold");
+    setCanvasFont(font, window_width * 0.02 + "pt", "bold");
     Texte(window_width / 2 - 100, 50, "Votre Tour", rgb(219, 118, 75));
   }
-  setCanvasFont("helvetica", window_width * 0.02 + "pt", "bold");
+  setCanvasFont(font, window_width * 0.02 + "pt", "bold");
   Texte(blue_fire_tiles.sprite_width*0.8/2 - window_width * 0.02 / 2, window_height - 50, hisastu, rgb(219, 118, 75));
 }
 
@@ -215,4 +217,4 @@ function game() {
   }, 1000 / 60);
 }
 
-game();
+setTimeout(game(),1000);
