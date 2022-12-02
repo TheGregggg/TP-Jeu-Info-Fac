@@ -38,8 +38,9 @@ function rectangle(x, y, width, height, radius, color) {
 
 function card(x, y, width, height, radius, spacing, color) {
   var draw = function() {
-	this.main_rect.draw();
+    this.main_rect.draw();
     this.title_rect.draw();
+    this.effect_rect.draw();
   };
  
   
@@ -54,7 +55,8 @@ function card(x, y, width, height, radius, spacing, color) {
     draw: draw
   }; 
   obj.main_rect = rectangle(obj.x,obj.y,obj.width,obj.height,obj.radius, obj.color);
-  obj.title_rect = rectangle(obj.x + obj.spacing, obj.y + obj.spacing, obj.width - obj.spacing*2, obj.height - obj.spacing*2, obj.radius, 'white');
+  obj.title_rect = rectangle(obj.x + obj.spacing, obj.y + obj.spacing, obj.width - obj.spacing*2, obj.height*0.25 - obj.spacing*2, obj.radius, 'white');
+  obj.effect_rect = rectangle(obj.x + obj.spacing, obj.y + obj.height*0.25 + obj.spacing, obj.width - obj.spacing * 2, obj.height*0.75 - obj.spacing*2, obj.radius, 'white');
   
   return obj;
 }
@@ -167,7 +169,17 @@ var blue_fire_img = PreloadImage(readFile("Data/blue-fire.png"));
 var blue_fire_tiles = animated_tilemap(blue_fire_img, 6);
 var blue_fire = animated_sprite(blue_fire_tiles, 0, window_height - blue_fire_img.height * 0.8 - 10, 0.8, 120);
 
-var test_card = card(0,0,100,162,12,5,'orange');
+var main = 5;
+
+var rel_card_y = window_height*5 / 6;
+var rel_card_width = window_width * 0.09;
+var rel_card_x = (window_width / 2) - (rel_card_width * main / 2);
+var cards = [];
+for(i = 0; i < main; i++) {
+  cards.push(card(rel_card_x + rel_card_width*i, rel_card_y, window_width*0.09, window_width*0.09*1.62, 12, 5, 'orange'));
+}
+
+//var test_card = card(0,0,100,162,12,5,'orange');
 
 // Game variables defintions
 var health = 40;
@@ -196,6 +208,12 @@ function draw_game() {
   });
 
   blue_fire.draw();
+  
+  cards.forEach(function(cardd) {
+    cardd.draw();
+  });
+  
+  //test_card.draw();
 
   if (game_state == "player_turn") {
     setCanvasFont(font, window_width * 0.02 + "pt", "bold");
