@@ -124,9 +124,15 @@ window_width / 2 - 100, window_height / 2 - 50, 200, 100, 20, rgba(0, 0, 0, 0.2)
 
 var players_images = PreloadImage(readFile("Data/persos.png"));
 var players = [];
-for (i = 1; i <= 10; i++) {
-  players.push(personnages(100 * i, 100, i));
-}
+players.push(personnages(window_width / 3,  window_height / 2 - 35, 1));
+players.push(personnages(window_width / 3 - 50,  window_height / 2, 2));
+players.push(personnages(window_width / 3 + 50,  window_height / 2, 3));
+players.push(personnages(window_width / 3,  window_height / 2 + 35, 4));
+
+players.push(personnages(window_width*2 / 3,  window_height / 2 - 35, 6));
+players.push(personnages(window_width*2 / 3 - 50,  window_height / 2, 7));
+players.push(personnages(window_width*2 / 3 + 50,  window_height / 2, 8));
+players.push(personnages(window_width*2 / 3,  window_height / 2 + 35, 9));
 
 var blue_fire_img = PreloadImage(readFile("Data/blue-fire.png"));
 var blue_fire_tiles = animated_tilemap(blue_fire_img, 6);
