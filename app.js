@@ -36,6 +36,29 @@ function rectangle(x, y, width, height, radius, color) {
   return obj;
 }
 
+function card(x, y, width, height, radius, spacing, color) {
+  var draw = function() {
+	this.main_rect.draw();
+    this.title_rect.draw();
+  };
+ 
+  
+  var obj = {
+    x: x,
+    y: y,
+    width: width,
+    height: height,
+    radius: radius,
+    spacing: spacing,
+    color: color,
+    draw: draw
+  }; 
+  obj.main_rect = rectangle(obj.x,obj.y,obj.width,obj.height,obj.radius, obj.color);
+  obj.title_rect = rectangle(obj.x + obj.spacing, obj.y + obj.spacing, obj.width - obj.spacing*2, obj.height - obj.spacing*2, obj.radius, 'white');
+  
+  return obj;
+}
+
 function animated_tilemap(image, nb_images) {
   var obj = {
     image: image,
@@ -143,6 +166,8 @@ players.push(personnages(rel_player_y * 2, rel_player_x + 35, 9));
 var blue_fire_img = PreloadImage(readFile("Data/blue-fire.png"));
 var blue_fire_tiles = animated_tilemap(blue_fire_img, 6);
 var blue_fire = animated_sprite(blue_fire_tiles, 0, window_height - blue_fire_img.height * 0.8 - 10, 0.8, 120);
+
+var test_card = card(0,0,100,162,12,5,'orange');
 
 // Game variables defintions
 var health = 40;
