@@ -205,7 +205,7 @@ function game() {
       players.forEach(function(player) {
         clearInterval(player.anim);
       });
-
+      clearInterval(blue_fire.anim);
       clearInterval(game_loop);
     }
 
