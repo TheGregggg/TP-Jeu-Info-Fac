@@ -42,8 +42,8 @@ function card(x, y, width, height, radius, spacing, color) {
     this.title_rect.draw();
     this.effect_rect.draw();
   };
- 
-  
+
+
   var obj = {
     x: x,
     y: y,
@@ -53,11 +53,11 @@ function card(x, y, width, height, radius, spacing, color) {
     spacing: spacing,
     color: color,
     draw: draw
-  }; 
-  obj.main_rect = rectangle(obj.x,obj.y,obj.width,obj.height,obj.radius, obj.color);
-  obj.title_rect = rectangle(obj.x + obj.spacing, obj.y + obj.spacing, obj.width - obj.spacing*2, obj.height*0.2 - obj.spacing*2, obj.radius, 'white');
-  obj.effect_rect = rectangle(obj.x + obj.spacing, obj.y + obj.title_rect.height + obj.spacing*2, obj.width - obj.spacing * 2, obj.height*0.75 - obj.spacing*2, obj.radius, 'white');
-  
+  };
+  obj.main_rect = rectangle(obj.x, obj.y, obj.width, obj.height, obj.radius, obj.color);
+  obj.title_rect = rectangle(obj.x + obj.spacing, obj.y + obj.spacing, obj.width - obj.spacing * 2, obj.height * 0.25 - obj.spacing * 2, obj.radius, 'white');
+  obj.effect_rect = rectangle(obj.x + obj.spacing, obj.y + obj.title_rect.height + obj.spacing * 2, obj.width - obj.spacing * 2, obj.height * 0.75 - obj.spacing, obj.radius, 'white');
+
   return obj;
 }
 
@@ -171,20 +171,22 @@ var blue_fire = animated_sprite(blue_fire_tiles, 0, window_height - blue_fire_im
 
 var nb_cards_hand = 5;
 
-var rel_card_y = window_height*5 / 6;
-var rel_cards_spacing = window_width*0.002;
+var rel_card_y = window_height * 5 / 6;
+var rel_cards_spacing = window_width * 0.002;
 
-var total_cards_width = rel_card_width * nb_cards_hand + rel_cards_spacing*(nb_cards_hand-1);
+var total_cards_width = rel_card_width * nb_cards_hand + rel_cards_spacing * (nb_cards_hand - 1);
 
 var rel_card_width = window_width * 0.09;
-var rel_card_x = (window_width / 2) - total_cards_width/2;
-var rel_card_radius = window_width*0.006;
-var rel_card_spacing = window_width*0.0032;
+var rel_card_height = rel_card_width*1.2;
+var rel_card_x = (window_width / 2) - total_cards_width / 2;
+var rel_card_radius = window_width * 0.006;
+var rel_card_spacing = window_width * 0.0032;
 
 var cards = [];
-for(i = 0; i < nb_cards_hand; i++) {
-  cards.push(card(rel_card_x + rel_card_width*i + rel_cards_spacing*i, rel_card_y, rel_card_width, rel_card_width*1.62, rel_card_radius, rel_card_spacing, 'orange'));
+for (i = 0; i < nb_cards_hand; i++) {
+  cards.push(card(rel_card_x + rel_card_width * i + rel_cards_spacing * i, rel_card_y, rel_card_width, rel_card_height, rel_card_radius, rel_card_spacing, 'orange'));
 }
+var hover_card = null;
 
 
 // Game variables defintions
@@ -214,19 +216,30 @@ function draw_game() {
   });
 
   blue_fire.draw();
-  
-  for(i = 0; i < nb_cards_hand; i++) {
-    cards[i] = card(rel_card_x + rel_card_width*i + rel_cards_spacing*i, rel_card_y, rel_card_width, rel_card_width*1.62, rel_card_radius, rel_card_spacing, 'orange');
-    cards[i].draw();
+
+  for (i = 0; i < nb_cards_hand; i++) {
+    if (cards[i].main_rect.collide_with_mouse()) {
+      hover_card = i;
+ 
+    } else {
+      cards[i] = card(rel_card_x + rel_card_width * i + rel_cards_spacing * i, rel_card_y, rel_card_width, rel_card_height, rel_card_radius, rel_card_spacing, 'orange');
+      cards[i].draw();
+    }
+
   }
-  
+  if(hover_card != null){
+    i = hover_card;
+    card(rel_card_x + rel_card_width * i + rel_cards_spacing * i - (rel_card_width*0.1)/2, window_height - rel_card_height * 1.1, rel_card_width*1.1, rel_card_height * 1.1, rel_card_radius, rel_card_spacing, 'red').draw();
+    hover_card = null;
+  }
+
 
   if (game_state == "player_turn") {
     setCanvasFont(font, window_width * 0.02 + "pt", "bold");
     Texte(window_width / 2 - 100, 50, "Votre Tour", rgb(219, 118, 75));
   }
   setCanvasFont(font, window_width * 0.02 + "pt", "bold");
-  Texte(blue_fire_tiles.sprite_width*0.8/2 - window_width * 0.02 / 2, window_height - 50, hisastu, rgb(219, 118, 75));
+  Texte(blue_fire_tiles.sprite_width * 0.8 / 2 - window_width * 0.02 / 2, window_height - 50, hisastu, rgb(219, 118, 75));
 }
 
 // main loop
@@ -266,4 +279,4 @@ function game() {
   }, 1000 / 60);
 }
 
-setTimeout(game(),1000);
+setTimeout(game(), 1000);
