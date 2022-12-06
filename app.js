@@ -177,7 +177,7 @@ var rel_cards_spacing = window_width * 0.002;
 var total_cards_width = rel_card_width * nb_cards_hand + rel_cards_spacing * (nb_cards_hand - 1);
 
 var rel_card_width = window_width * 0.09;
-var rel_card_height = rel_card_width*1.2;
+var rel_card_height = rel_card_width * 1.2;
 var rel_card_x = (window_width / 2) - total_cards_width / 2;
 var rel_card_radius = window_width * 0.006;
 var rel_card_spacing = window_width * 0.0032;
@@ -187,6 +187,13 @@ for (i = 0; i < nb_cards_hand; i++) {
   cards.push(card(rel_card_x + rel_card_width * i + rel_cards_spacing * i, rel_card_y, rel_card_width, rel_card_height, rel_card_radius, rel_card_spacing, 'orange'));
 }
 var hover_card = null;
+
+var selected_card_id = null;
+var selected_card = null;
+var selected_x_offset = null;
+var selected_y_offset = null;
+var deselect_time = 500;
+var can_deselect = false;
 
 
 // Game variables defintions
@@ -218,19 +225,39 @@ function draw_game() {
   blue_fire.draw();
 
   for (i = 0; i < nb_cards_hand; i++) {
-    if (cards[i].main_rect.collide_with_mouse()) {
+    if (cards[i].main_rect.collide_with_mouse() && selected_card === null) {
       hover_card = i;
- 
-    } else {
+      if (mouse_clicked) {
+        // si aucune carte est selectionné on selectionne la carte survolé lors du click
+        selected_card_id = i;
+        selected_card = cards[i];
+        selected_x_offset = mouseX - (selected_card.x - (rel_card_width * 0.1) / 2);
+        selected_y_offset = mouseY - (window_height - rel_card_height * 1.1);
+        setTimeout(function(){can_deselect = true;}, deselect_time);
+      }
+
+    } else if (i !== selected_card_id) {
       cards[i] = card(rel_card_x + rel_card_width * i + rel_cards_spacing * i, rel_card_y, rel_card_width, rel_card_height, rel_card_radius, rel_card_spacing, 'orange');
       cards[i].draw();
     }
 
   }
-  if(hover_card != null){
+  if (hover_card != null && selected_card === null) {
     i = hover_card;
-    card(rel_card_x + rel_card_width * i + rel_cards_spacing * i - (rel_card_width*0.1)/2, window_height - rel_card_height * 1.1, rel_card_width*1.1, rel_card_height * 1.1, rel_card_radius, rel_card_spacing, 'red').draw();
+    card(rel_card_x + rel_card_width * i + rel_cards_spacing * i - (rel_card_width * 0.1) / 2, window_height - rel_card_height * 1.1, rel_card_width * 1.1, rel_card_height * 1.1, rel_card_radius, rel_card_spacing, 'red').draw();
     hover_card = null;
+  }
+
+  if (selected_card != null) {
+    selected_card = card(mouseX - selected_x_offset, mouseY - selected_y_offset, rel_card_width* 1.1, rel_card_height* 1.1, rel_card_radius, rel_card_spacing, 'orange');
+    selected_card.draw();
+
+    if (mouse_clicked && can_deselect && mouseY > rel_card_y*0.8  && mouseX > rel_card_x*0.8 && mouseX < rel_card_x+total_cards_width*1.2) {
+        // si user clique dans la zone des cartes, annule la selection
+        selected_card = null;
+      selected_card_id = null;
+        can_deselect = false;
+    }
   }
 
 
