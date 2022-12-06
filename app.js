@@ -43,9 +43,11 @@ function card(x, y, width, height, radius, spacing, color, hissatsu) {
     
     var type_to_display = 'Attaque';
     var card_color = 'red';
+    var effect_to_display = 'de dégats';
     if (this.hissatsu.type == 'def'){
       type_to_display = 'Défense';
       card_color = 'blue';
+      effect_to_display = 'de défenses';
     }
     
     if (this.color == "default"){
@@ -54,7 +56,6 @@ function card(x, y, width, height, radius, spacing, color, hissatsu) {
     this.main_rect.draw();
     
     this.hissatsu_cost_rect.draw();
-
     setCanvasFont(font, this.width * 0.11 + "pt", "bold");
     txt_size = ctx.measureText(this.hissatsu.cost);
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
@@ -62,7 +63,6 @@ function card(x, y, width, height, radius, spacing, color, hissatsu) {
     
     
     this.type_rect.draw();
-    
     setCanvasFont(font, this.width * 0.085 + "pt", "bold");
     txt_size = ctx.measureText(type_to_display);
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
@@ -76,6 +76,19 @@ function card(x, y, width, height, radius, spacing, color, hissatsu) {
     Texte(this.x + this.width/2 - txt_size.width/2, this.title_rect.y + this.title_rect.height/2 + text_height/2 - this.spacing*2/3, this.hissatsu.name, "black");
     
     this.effect_rect.draw();
+    // effect number
+    setCanvasFont(font, this.width * 0.085 + "pt", "bold");
+    txt_size = ctx.measureText(this.hissatsu.effect);
+    text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
+    Texte(this.x + this.width/2 - txt_size.width/2, this.effect_rect.y + this.effect_rect.height/2 - this.spacing*2/3, this.hissatsu.effect, card_color);
+    
+    // effect text
+    setCanvasFont('Arial', this.width * 0.08 + "pt", "bold");
+    txt_size = ctx.measureText(effect_to_display);
+    text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
+    if (!(this.effect_rect.y + this.effect_rect.height/2 + text_height - this.spacing*2/3 > window_height)){
+    Texte(this.x + this.width/2 - txt_size.width/2, this.effect_rect.y + this.effect_rect.height/2 + text_height - this.spacing*2/3, effect_to_display, "black");
+    }
   };
 
   var obj = {
