@@ -55,8 +55,8 @@ function card(x, y, width, height, radius, spacing, color) {
     draw: draw
   }; 
   obj.main_rect = rectangle(obj.x,obj.y,obj.width,obj.height,obj.radius, obj.color);
-  obj.title_rect = rectangle(obj.x + obj.spacing, obj.y + obj.spacing, obj.width - obj.spacing*2, obj.height*0.25 - obj.spacing*2, obj.radius, 'white');
-  obj.effect_rect = rectangle(obj.x + obj.spacing, obj.y + obj.height*0.25 + obj.spacing, obj.width - obj.spacing * 2, obj.height*0.75 - obj.spacing*2, obj.radius, 'white');
+  obj.title_rect = rectangle(obj.x + obj.spacing, obj.y + obj.spacing, obj.width - obj.spacing*2, obj.height*0.2 - obj.spacing*2, obj.radius, 'white');
+  obj.effect_rect = rectangle(obj.x + obj.spacing, obj.y + obj.title_rect.height + obj.spacing*2, obj.width - obj.spacing * 2, obj.height*0.75 - obj.spacing*2, obj.radius, 'white');
   
   return obj;
 }
@@ -169,14 +169,21 @@ var blue_fire_img = PreloadImage(readFile("Data/blue-fire.png"));
 var blue_fire_tiles = animated_tilemap(blue_fire_img, 6);
 var blue_fire = animated_sprite(blue_fire_tiles, 0, window_height - blue_fire_img.height * 0.8 - 10, 0.8, 120);
 
-var main = 5;
+var nb_cards_hand = 5;
 
 var rel_card_y = window_height*5 / 6;
+var rel_cards_spacing = window_width*0.002;
+
+var total_cards_width = rel_card_width * nb_cards_hand + rel_cards_spacing*(nb_cards_hand-1);
+
 var rel_card_width = window_width * 0.09;
-var rel_card_x = (window_width / 2) - (rel_card_width * main / 2);
+var rel_card_x = (window_width / 2) - total_cards_width/2;
+var rel_card_radius = window_width*0.006;
+var rel_card_spacing = window_width*0.0032;
+
 var cards = [];
-for(i = 0; i < main; i++) {
-  cards.push(card(rel_card_x + rel_card_width*i, rel_card_y, window_width*0.09, window_width*0.09*1.62, 12, 5, 'orange'));
+for(i = 0; i < nb_cards_hand; i++) {
+  cards.push(card(rel_card_x + rel_card_width*i + rel_cards_spacing*i, rel_card_y, rel_card_width, rel_card_width*1.62, rel_card_radius, rel_card_spacing, 'orange'));
 }
 
 //var test_card = card(0,0,100,162,12,5,'orange');
