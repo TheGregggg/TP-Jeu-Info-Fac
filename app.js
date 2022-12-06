@@ -1,4 +1,3 @@
-// init algoscript
 turtleEnabled = false;
 Initialiser();
 
@@ -36,13 +35,21 @@ function rectangle(x, y, width, height, radius, color) {
   return obj;
 }
 
-function card(x, y, width, height, radius, spacing, color) {
+function card(x, y, width, height, radius, spacing, color, hissatsu) {
   var draw = function() {
     this.main_rect.draw();
+    
+    this.hissatsu_cost_rect.draw();
+    this.type_rect.draw();
+    
     this.title_rect.draw();
+    setCanvasFont('Arial', this.width * 0.07 + "pt", "bold");
+    var txt_size = ctx.measureText(this.hissatsu.name);
+    var text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
+    Texte(this.x + this.width/2 - txt_size.width/2, this.y + this.title_rect.height/2 + text_height/2, this.hissatsu.name, "black");
+    
     this.effect_rect.draw();
   };
-
 
   var obj = {
     x: x,
@@ -52,11 +59,14 @@ function card(x, y, width, height, radius, spacing, color) {
     radius: radius,
     spacing: spacing,
     color: color,
-    draw: draw
+    draw: draw,
+    hissatsu: hissatsu
   };
   obj.main_rect = rectangle(obj.x, obj.y, obj.width, obj.height, obj.radius, obj.color);
-  obj.title_rect = rectangle(obj.x + obj.spacing, obj.y + obj.spacing, obj.width - obj.spacing * 2, obj.height * 0.25 - obj.spacing * 2, obj.radius, 'white');
-  obj.effect_rect = rectangle(obj.x + obj.spacing, obj.y + obj.title_rect.height + obj.spacing * 2, obj.width - obj.spacing * 2, obj.height * 0.75 - obj.spacing, obj.radius, 'white');
+  obj.hissatsu_cost_rect = rectangle(obj.x + obj.spacing, obj.y + obj.spacing, (obj.width - obj.spacing * 3)*0.25, obj.height * 0.25 - obj.spacing * 2, obj.radius, 'white');
+  obj.type_rect = rectangle(obj.x + obj.spacing*2 + (obj.width - obj.spacing * 3)*0.25, obj.y + obj.spacing, (obj.width - obj.spacing * 3)*0.75, obj.height * 0.25 - obj.spacing * 2, obj.radius, 'white');
+  obj.title_rect = rectangle(obj.x + obj.spacing, obj.y + obj.type_rect.height + obj.spacing * 2, obj.width - obj.spacing * 2, obj.height * 0.25 - obj.spacing * 2, obj.radius, 'white');
+  obj.effect_rect = rectangle(obj.x + obj.spacing, obj.y + obj.type_rect.height*2 + obj.spacing * 3, obj.width - obj.spacing * 2, obj.height * 0.50, obj.radius, 'white');
 
   return obj;
 }
@@ -130,6 +140,16 @@ function personnages(x, y, nbImage) {
   return obj;
 }
 
+function hissatsu(name, cost, type, effect){
+  obj = {
+    name: name,
+    cost: cost,
+    type: type,
+    effect: effect
+  };
+  return obj;
+}
+
 function MouseClick(x, y) {
   mouse_clicked = true;
 }
@@ -182,9 +202,11 @@ var rel_card_x = (window_width / 2) - total_cards_width / 2;
 var rel_card_radius = window_width * 0.006;
 var rel_card_spacing = window_width * 0.0032;
 
+var test_hissatsu = hissatsu("Tempete de feu", 3, "atk", 5);
+
 var cards = [];
 for (i = 0; i < nb_cards_hand; i++) {
-  cards.push(card(rel_card_x + rel_card_width * i + rel_cards_spacing * i, rel_card_y, rel_card_width, rel_card_height, rel_card_radius, rel_card_spacing, 'orange'));
+  cards.push(card(rel_card_x + rel_card_width * i + rel_cards_spacing * i, rel_card_y, rel_card_width, rel_card_height, rel_card_radius, rel_card_spacing, 'orange', test_hissatsu));
 }
 var hover_card = null;
 
@@ -199,8 +221,8 @@ var can_deselect = false;
 // Game variables defintions
 var health = 40;
 var max_health = 40;
-var hisastu = 5;
-var max_hisastu = 5;
+var hissatsu = 5;
+var max_hissatsu = 5;
 
 function draw_menu() {
   DrawImageObject(background_menu, 0, 0, window_width, window_height);
@@ -237,25 +259,25 @@ function draw_game() {
       }
 
     } else if (i !== selected_card_id) {
-      cards[i] = card(rel_card_x + rel_card_width * i + rel_cards_spacing * i, rel_card_y, rel_card_width, rel_card_height, rel_card_radius, rel_card_spacing, 'orange');
+      cards[i] = card(rel_card_x + rel_card_width * i + rel_cards_spacing * i, rel_card_y, rel_card_width, rel_card_height, rel_card_radius, rel_card_spacing, 'orange', cards[i].hissatsu);
       cards[i].draw();
     }
 
   }
   if (hover_card != null && selected_card === null) {
     i = hover_card;
-    card(rel_card_x + rel_card_width * i + rel_cards_spacing * i - (rel_card_width * 0.1) / 2, window_height - rel_card_height * 1.1, rel_card_width * 1.1, rel_card_height * 1.1, rel_card_radius, rel_card_spacing, 'red').draw();
+    card(rel_card_x + rel_card_width * i + rel_cards_spacing * i - (rel_card_width * 0.1) / 2, window_height - rel_card_height * 1.1, rel_card_width * 1.1, rel_card_height * 1.1, rel_card_radius, rel_card_spacing, 'red', cards[i].hissatsu).draw();
     hover_card = null;
   }
 
   if (selected_card != null) {
-    selected_card = card(mouseX - selected_x_offset, mouseY - selected_y_offset, rel_card_width* 1.1, rel_card_height* 1.1, rel_card_radius, rel_card_spacing, 'orange');
+    selected_card = card(mouseX - selected_x_offset, mouseY - selected_y_offset, rel_card_width* 1.1, rel_card_height* 1.1, rel_card_radius, rel_card_spacing, 'orange', selected_card.hissatsu);
     selected_card.draw();
 
     if (mouse_clicked && can_deselect && mouseY > rel_card_y*0.8  && mouseX > rel_card_x*0.8 && mouseX < rel_card_x+total_cards_width*1.2) {
         // si user clique dans la zone des cartes, annule la selection
         selected_card = null;
-      selected_card_id = null;
+        selected_card_id = null;
         can_deselect = false;
     }
   }
@@ -266,7 +288,7 @@ function draw_game() {
     Texte(window_width / 2 - 100, 50, "Votre Tour", rgb(219, 118, 75));
   }
   setCanvasFont(font, window_width * 0.02 + "pt", "bold");
-  Texte(blue_fire_tiles.sprite_width * 0.8 / 2 - window_width * 0.02 / 2, window_height - 50, hisastu, rgb(219, 118, 75));
+  Texte(blue_fire_tiles.sprite_width * 0.8 / 2 - window_width * 0.02 / 2, window_height - 50, hissatsu, rgb(219, 118, 75));
 }
 
 // main loop
