@@ -186,7 +186,6 @@ for(i = 0; i < nb_cards_hand; i++) {
   cards.push(card(rel_card_x + rel_card_width*i + rel_cards_spacing*i, rel_card_y, rel_card_width, rel_card_width*1.62, rel_card_radius, rel_card_spacing, 'orange'));
 }
 
-//var test_card = card(0,0,100,162,12,5,'orange');
 
 // Game variables defintions
 var health = 40;
@@ -216,11 +215,11 @@ function draw_game() {
 
   blue_fire.draw();
   
-  cards.forEach(function(cardd) {
-    cardd.draw();
-  });
+  for(i = 0; i < nb_cards_hand; i++) {
+    cards[i] = card(rel_card_x + rel_card_width*i + rel_cards_spacing*i, rel_card_y, rel_card_width, rel_card_width*1.62, rel_card_radius, rel_card_spacing, 'orange');
+    cards[i].draw();
+  }
   
-  //test_card.draw();
 
   if (game_state == "player_turn") {
     setCanvasFont(font, window_width * 0.02 + "pt", "bold");
