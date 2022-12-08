@@ -40,54 +40,54 @@ function card(x, y, width, height, radius, spacing, color, hissatsu) {
   var draw = function() {
     var txt_size;
     var text_height;
-    
+
     var type_to_display = 'Attaque';
     var card_color = 'red';
     var effect_to_display = 'de dégats';
-    if (this.hissatsu.type == 'def'){
+    if (this.hissatsu.type == 'def') {
       type_to_display = 'Défense';
       card_color = 'blue';
       effect_to_display = 'de défenses';
     }
-    
-    if (this.color == "default"){
+
+    if (this.color == "default") {
       this.main_rect.color = card_color;
     }
     this.main_rect.draw();
-    
+
     this.hissatsu_cost_rect.draw();
     setCanvasFont(font, this.width * 0.11 + "pt", "bold");
     txt_size = ctx.measureText(this.hissatsu.cost);
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
-    Texte(this.hissatsu_cost_rect.x + this.hissatsu_cost_rect.width/2 - txt_size.width/2, this.y + this.hissatsu_cost_rect.height/2 + text_height/2, this.hissatsu.cost, orange);
-    
-    
+    Texte(this.hissatsu_cost_rect.x + this.hissatsu_cost_rect.width / 2 - txt_size.width / 2, this.y + this.hissatsu_cost_rect.height / 2 + text_height / 2, this.hissatsu.cost, orange);
+
+
     this.type_rect.draw();
     setCanvasFont(font, this.width * 0.085 + "pt", "bold");
     txt_size = ctx.measureText(type_to_display);
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
-    Texte(this.type_rect.x + this.type_rect.width/2 - txt_size.width/2, this.y + this.type_rect.height/2 + text_height/2, type_to_display, orange);
-    
-    
+    Texte(this.type_rect.x + this.type_rect.width / 2 - txt_size.width / 2, this.y + this.type_rect.height / 2 + text_height / 2, type_to_display, orange);
+
+
     this.title_rect.draw();
     setCanvasFont('Arial', this.width * 0.07 + "pt", "bold");
     txt_size = ctx.measureText(this.hissatsu.name);
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
-    Texte(this.x + this.width/2 - txt_size.width/2, this.title_rect.y + this.title_rect.height/2 + text_height/2 - this.spacing*2/3, this.hissatsu.name, "black");
-    
+    Texte(this.x + this.width / 2 - txt_size.width / 2, this.title_rect.y + this.title_rect.height / 2 + text_height / 2 - this.spacing * 2 / 3, this.hissatsu.name, "black");
+
     this.effect_rect.draw();
     // effect number
     setCanvasFont(font, this.width * 0.085 + "pt", "bold");
     txt_size = ctx.measureText(this.hissatsu.effect);
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
-    Texte(this.x + this.width/2 - txt_size.width/2, this.effect_rect.y + this.effect_rect.height/2 - this.spacing*2/3, this.hissatsu.effect, card_color);
-    
+    Texte(this.x + this.width / 2 - txt_size.width / 2, this.effect_rect.y + this.effect_rect.height / 2 - this.spacing * 2 / 3, this.hissatsu.effect, card_color);
+
     // effect text
     setCanvasFont('Arial', this.width * 0.08 + "pt", "bold");
     txt_size = ctx.measureText(effect_to_display);
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
-    if (!(this.effect_rect.y + this.effect_rect.height/2 + text_height - this.spacing*2/3 > window_height)){
-    Texte(this.x + this.width/2 - txt_size.width/2, this.effect_rect.y + this.effect_rect.height/2 + text_height - this.spacing*2/3, effect_to_display, "black");
+    if (!(this.effect_rect.y + this.effect_rect.height / 2 + text_height - this.spacing * 2 / 3 > window_height)) {
+      Texte(this.x + this.width / 2 - txt_size.width / 2, this.effect_rect.y + this.effect_rect.height / 2 + text_height - this.spacing * 2 / 3, effect_to_display, "black");
     }
   };
 
@@ -103,10 +103,10 @@ function card(x, y, width, height, radius, spacing, color, hissatsu) {
     hissatsu: hissatsu
   };
   obj.main_rect = rectangle(obj.x, obj.y, obj.width, obj.height, obj.radius, obj.color);
-  obj.hissatsu_cost_rect = rectangle(obj.x + obj.spacing, obj.y + obj.spacing, (obj.width - obj.spacing * 3)*0.25, obj.height * 0.25 - obj.spacing * 2, obj.radius, 'white');
-  obj.type_rect = rectangle(obj.x + obj.spacing*2 + (obj.width - obj.spacing * 3)*0.25, obj.y + obj.spacing, (obj.width - obj.spacing * 3)*0.75, obj.height * 0.25 - obj.spacing * 2, obj.radius, 'white');
+  obj.hissatsu_cost_rect = rectangle(obj.x + obj.spacing, obj.y + obj.spacing, (obj.width - obj.spacing * 3) * 0.25, obj.height * 0.25 - obj.spacing * 2, obj.radius, 'white');
+  obj.type_rect = rectangle(obj.x + obj.spacing * 2 + (obj.width - obj.spacing * 3) * 0.25, obj.y + obj.spacing, (obj.width - obj.spacing * 3) * 0.75, obj.height * 0.25 - obj.spacing * 2, obj.radius, 'white');
   obj.title_rect = rectangle(obj.x + obj.spacing, obj.y + obj.type_rect.height + obj.spacing * 2, obj.width - obj.spacing * 2, obj.height * 0.25 - obj.spacing * 2, obj.radius, 'white');
-  obj.effect_rect = rectangle(obj.x + obj.spacing, obj.y + obj.type_rect.height*2 + obj.spacing * 3, obj.width - obj.spacing * 2, obj.height * 0.50, obj.radius, 'white');
+  obj.effect_rect = rectangle(obj.x + obj.spacing, obj.y + obj.type_rect.height * 2 + obj.spacing * 3, obj.width - obj.spacing * 2, obj.height * 0.50, obj.radius, 'white');
 
   return obj;
 }
@@ -180,7 +180,7 @@ function personnages(x, y, nbImage) {
   return obj;
 }
 
-function hissatsu(name, cost, type, effect){
+function hissatsu(name, cost, type, effect) {
   obj = {
     name: name,
     cost: cost,
@@ -212,18 +212,18 @@ window_width / 2 - 100, window_height / 2 - 50, 200, 100, 20, rgba(0, 0, 0, 0.2)
 var background_game = PreloadImage(readFile("Data/background.jpg"));
 
 var players_images = PreloadImage(readFile("Data/persos.png"));
-var rel_player_x = window_height * 1.75 / 3;
-var rel_player_y = window_width / 3;
+var rel_player_x = window_width / 3;
+var rel_player_y = window_height * 1.75 / 3;
 var players = [];
-players.push(personnages(rel_player_y, rel_player_x - 35, 1));
-players.push(personnages(rel_player_y - 50, rel_player_x, 2));
-players.push(personnages(rel_player_y + 50, rel_player_x, 3));
-players.push(personnages(rel_player_y, rel_player_x + 35, 4));
+players.push(personnages(rel_player_x, rel_player_y - 35, 1));
+players.push(personnages(rel_player_x - 50, rel_player_y, 2));
+players.push(personnages(rel_player_x + 50, rel_player_y, 3));
+players.push(personnages(rel_player_x, rel_player_y + 35, 4));
 
-players.push(personnages(rel_player_y * 2, rel_player_x - 35, 6));
-players.push(personnages(rel_player_y * 2 - 50, rel_player_x, 7));
-players.push(personnages(rel_player_y * 2 + 50, rel_player_x, 8));
-players.push(personnages(rel_player_y * 2, rel_player_x + 35, 9));
+players.push(personnages(rel_player_x * 2, rel_player_y - 35, 6));
+players.push(personnages(rel_player_x * 2 - 50, rel_player_y, 7));
+players.push(personnages(rel_player_x * 2 + 50, rel_player_y, 8));
+players.push(personnages(rel_player_x * 2, rel_player_y + 35, 9));
 
 var blue_fire_img = PreloadImage(readFile("Data/blue-fire.png"));
 var blue_fire_tiles = animated_tilemap(blue_fire_img, 6);
@@ -264,6 +264,14 @@ var max_health = 40;
 var hissatsu = 5;
 var max_hissatsu = 5;
 
+var enemy_health = 40;
+var max_enemy_health = 40;
+var enemy_hissatsu = 5;
+var max_enemy_hissatsu = 5;
+
+var enemy_health_bar = rectangle(rel_player_x * 2 - 35, rel_player_y - 55, window_width*0.05*(max_enemy_health/enemy_health), window_width*0.005, window_width*0.001, "red");
+var enemy_health_bar_complete = rectangle(rel_player_x * 2 - 35, rel_player_y - 55, window_width*0.05, window_width*0.005, window_width*0.001, "black");
+
 function draw_menu() {
   DrawImageObject(background_menu, 0, 0, window_width, window_height);
 
@@ -286,49 +294,64 @@ function draw_game() {
 
   blue_fire.draw();
 
-  for (i = 0; i < nb_cards_hand; i++) {
-    if (cards[i].main_rect.collide_with_mouse() && selected_card === null) {
-      hover_card = i;
-      if (mouse_clicked) {
-        // si aucune carte est selectionné on selectionne la carte survolé lors du click
-        selected_card_id = i;
-        selected_card = cards[i];
-        selected_x_offset = mouseX - (selected_card.x - (rel_card_width * 0.1) / 2);
-        selected_y_offset = mouseY - (window_height - rel_card_height * 1.1);
-        setTimeout(function(){can_deselect = true;}, deselect_time);
-      }
-
-    } else if (i !== selected_card_id) {
-      cards[i] = card(rel_card_x + rel_card_width * i + rel_cards_spacing * i, rel_card_y, rel_card_width, rel_card_height, rel_card_radius, rel_card_spacing, 'default', cards[i].hissatsu);
-      cards[i].draw();
-    }
-
-  }
-  if (hover_card != null && selected_card === null) {
-    i = hover_card;
-    card(rel_card_x + rel_card_width * i + rel_cards_spacing * i - (rel_card_width * 0.1) / 2, window_height - rel_card_height * 1.1, rel_card_width * 1.1, rel_card_height * 1.1, rel_card_radius, rel_card_spacing, orange, cards[i].hissatsu).draw();
-    hover_card = null;
-  }
-
-  if (selected_card != null) {
-    selected_card = card(mouseX - selected_x_offset, mouseY - selected_y_offset, rel_card_width* 1.1, rel_card_height* 1.1, rel_card_radius, rel_card_spacing, 'default', selected_card.hissatsu);
-    selected_card.draw();
-
-    if (mouse_clicked && can_deselect && mouseY > rel_card_y*0.8  && mouseX > rel_card_x*0.8 && mouseX < rel_card_x+total_cards_width*1.2) {
-        // si user clique dans la zone des cartes, annule la selection
-        selected_card = null;
-        selected_card_id = null;
-        can_deselect = false;
-    }
-  }
 
 
   if (game_state == "player_turn") {
     setCanvasFont(font, window_width * 0.02 + "pt", "bold");
     Texte(window_width / 2 - 100, 50, "Votre Tour", orange);
+
+    for (i = 0; i < nb_cards_hand; i++) {
+      if (cards[i].main_rect.collide_with_mouse() && selected_card === null) {
+        hover_card = i;
+        if (mouse_clicked) {
+          // si aucune carte est selectionné on selectionne la carte survolé lors du click
+          selected_card_id = i;
+          selected_card = cards[i];
+          selected_x_offset = mouseX - (selected_card.x - (rel_card_width * 0.1) / 2);
+          selected_y_offset = mouseY - (window_height - rel_card_height * 1.1);
+          setTimeout(function() {
+            can_deselect = true;
+          }, deselect_time);
+        }
+
+      } else if (i !== selected_card_id) {
+        cards[i] = card(rel_card_x + rel_card_width * i + rel_cards_spacing * i, rel_card_y, rel_card_width, rel_card_height, rel_card_radius, rel_card_spacing, 'default', cards[i].hissatsu);
+        cards[i].draw();
+      }
+
+    }
+    if (hover_card != null && selected_card === null) {
+      i = hover_card;
+      card(rel_card_x + rel_card_width * i + rel_cards_spacing * i - (rel_card_width * 0.1) / 2, window_height - rel_card_height * 1.1, rel_card_width * 1.1, rel_card_height * 1.1, rel_card_radius, rel_card_spacing, orange, cards[i].hissatsu).draw();
+      hover_card = null;
+    }
+
+    if (selected_card != null) {
+      selected_card = card(mouseX - selected_x_offset, mouseY - selected_y_offset, rel_card_width * 1.1, rel_card_height * 1.1, rel_card_radius, rel_card_spacing, 'default', selected_card.hissatsu);
+      selected_card.draw();
+
+      if (mouse_clicked && can_deselect && mouseY > rel_card_y * 0.8 && mouseX > rel_card_x * 0.8 && mouseX < rel_card_x + total_cards_width * 1.2) {
+        // si user clique dans la zone des cartes, annule la selection
+        selected_card = null;
+        selected_card_id = null;
+        can_deselect = false;
+      }
+    }
+
+  }
+  else{
+  //enemy turn
+
+    
   }
   setCanvasFont(font, window_width * 0.02 + "pt", "bold");
   Texte(blue_fire_tiles.sprite_width * 0.8 / 2 - window_width * 0.02 / 2, window_height - 50, hissatsu, orange);
+  
+  Texte(blue_fire_tiles.sprite_width * 0.8 + window_width * 0.02 / 2, window_height - 50, health, orange);
+  
+  enemy_health_bar_complete.draw();
+  enemy_health_bar.draw();
+  
 }
 
 // main loop
