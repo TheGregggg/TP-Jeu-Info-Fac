@@ -194,6 +194,16 @@ function MouseClick(x, y) {
   mouse_clicked = true;
 }
 
+function shuffleArray(array){
+  for (i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+}
+
+
 // variables definitions
 var mouse_clicked = null;
 
@@ -229,6 +239,34 @@ var blue_fire_img = PreloadImage(readFile("Data/blue-fire.png"));
 var blue_fire_tiles = animated_tilemap(blue_fire_img, 6);
 var blue_fire = animated_sprite(blue_fire_tiles, 0, window_height - blue_fire_img.height * 0.8 - 10, 0.8, 120);
 
+var discard = [];
+var deck = [hissatsu("Tempete de feu", 3, "atk", 5),
+           hissatsu("Tempete de feu", 3, "atk", 5),
+           hissatsu("Tempete de feu", 3, "atk", 5),
+           hissatsu("Blizzard eternel", 1, "atk", 2),
+           hissatsu("Blizzard eternel", 1, "atk", 2),
+           hissatsu("Blizzard eternel", 1, "atk", 2),
+           hissatsu("Tornade du dragon", 3, "atk", 4),
+           hissatsu("Tornade du dragon", 3, "atk", 4),
+           hissatsu("Tornade du dragon", 3, "atk", 4),
+           hissatsu("Tornade du dragon", 3, "atk", 4),
+           hissatsu("Feu glacé", 4, "atk", 9),
+           hissatsu("Feu glacé", 4, "atk", 9),
+           hissatsu("Feu glacé", 4, "atk", 9),
+           hissatsu("Main celeste", 2, "def", 4),
+           hissatsu("Main celeste", 2, "def", 4),
+           hissatsu("Main celeste", 2, "def", 4),
+           hissatsu("Main Magique", 3, "def", 7),
+           hissatsu("Main Magique", 3, "def", 7),
+           hissatsu("Main Magique", 3, "def", 7)];
+
+shuffleArray(deck);
+shuffleArray(deck);
+shuffleArray(deck);
+shuffleArray(deck);
+shuffleArray(deck);
+shuffleArray(deck);
+
 var nb_cards_hand = 5;
 
 var rel_card_y = window_height * 5 / 6;
@@ -242,12 +280,14 @@ var rel_card_x = (window_width / 2) - total_cards_width / 2;
 var rel_card_radius = window_width * 0.006;
 var rel_card_spacing = window_width * 0.0032;
 
-var test_hissatsu = hissatsu("Tempete de feu", 3, "atk", 5);
 
 var cards = [];
-for (i = 0; i < nb_cards_hand; i++) {
-  cards.push(card(rel_card_x + rel_card_width * i + rel_cards_spacing * i, rel_card_y, rel_card_width, rel_card_height, rel_card_radius, rel_card_spacing, 'default', test_hissatsu));
+for (i = 0; i < 5; i++) {
+  cards.push(card(rel_card_x + rel_card_width * i + rel_cards_spacing * i, rel_card_y, rel_card_width, rel_card_height, rel_card_radius, rel_card_spacing, 'default', deck.pop()));
 }
+
+nb_cards_hand = cards.length;
+
 var hover_card = null;
 
 var selected_card_id = null;
@@ -258,19 +298,25 @@ var deselect_time = 500;
 var can_deselect = false;
 
 
+
 // Game variables defintions
 var health = 40;
 var max_health = 40;
 var hissatsu = 5;
 var max_hissatsu = 5;
+var shield = 0;
+
+var health_bar_outline = 2;
+var health_bar = rectangle(rel_player_x + 18 - window_width*0.05/2, rel_player_y - 55, window_width*0.05*(health/max_health), window_width*0.005, window_width*0.001, "red");
+var health_bar_complete = rectangle(rel_player_x + 18 - window_width*0.05/2 - health_bar_outline, rel_player_y - 55 - health_bar_outline, window_width*0.05 + health_bar_outline*2, window_width*0.005 + health_bar_outline*2, window_width*0.001, "black");
 
 var enemy_health = 40;
 var max_enemy_health = 40;
 var enemy_hissatsu = 5;
 var max_enemy_hissatsu = 5;
 
-var enemy_health_bar = rectangle(rel_player_x * 2 - 35, rel_player_y - 55, window_width*0.05*(max_enemy_health/enemy_health), window_width*0.005, window_width*0.001, "red");
-var enemy_health_bar_complete = rectangle(rel_player_x * 2 - 35, rel_player_y - 55, window_width*0.05, window_width*0.005, window_width*0.001, "black");
+var enemy_health_bar = rectangle(rel_player_x * 2 + 18 - window_width*0.05/2, rel_player_y - 55, window_width*0.05*(enemy_health/max_enemy_health), window_width*0.005, window_width*0.001, "red");
+var enemy_health_bar_complete = rectangle(rel_player_x * 2 + 18 - window_width*0.05/2 - health_bar_outline, rel_player_y - 55 - health_bar_outline, window_width*0.05 + health_bar_outline*2, window_width*0.005 + health_bar_outline*2, window_width*0.001, "black");
 
 function draw_menu() {
   DrawImageObject(background_menu, 0, 0, window_width, window_height);
@@ -294,13 +340,22 @@ function draw_game() {
 
   blue_fire.draw();
 
+  setCanvasFont(font, window_width * 0.02 + "pt", "bold");
+  Texte(blue_fire_tiles.sprite_width * 0.8 / 2 - window_width * 0.02 / 2, window_height - 50, hissatsu, orange);
+  
+  health_bar_complete.draw();
+  health_bar.draw();
+  
+  enemy_health_bar_complete.draw();
+  enemy_health_bar.draw();
+  
 
 
   if (game_state == "player_turn") {
     setCanvasFont(font, window_width * 0.02 + "pt", "bold");
     Texte(window_width / 2 - 100, 50, "Votre Tour", orange);
 
-    for (i = 0; i < nb_cards_hand; i++) {
+    for (i = 0; i < cards.length; i++) {
       if (cards[i].main_rect.collide_with_mouse() && selected_card === null) {
         hover_card = i;
         if (mouse_clicked) {
@@ -309,6 +364,7 @@ function draw_game() {
           selected_card = cards[i];
           selected_x_offset = mouseX - (selected_card.x - (rel_card_width * 0.1) / 2);
           selected_y_offset = mouseY - (window_height - rel_card_height * 1.1);
+          hover_card = null;
           setTimeout(function() {
             can_deselect = true;
           }, deselect_time);
@@ -330,7 +386,31 @@ function draw_game() {
       selected_card = card(mouseX - selected_x_offset, mouseY - selected_y_offset, rel_card_width * 1.1, rel_card_height * 1.1, rel_card_radius, rel_card_spacing, 'default', selected_card.hissatsu);
       selected_card.draw();
 
-      if (mouse_clicked && can_deselect && mouseY > rel_card_y * 0.8 && mouseX > rel_card_x * 0.8 && mouseX < rel_card_x + total_cards_width * 1.2) {
+      if (mouse_clicked && can_deselect){
+        if(mouseY < rel_card_y * 0.8 || mouseX < rel_card_x * 0.8 || mouseX > rel_card_x + total_cards_width * 1.2) {
+          // si user clique dans la zone de jeu, utilise la carte
+            if (selected_card.hissatsu.cost <= hissatsu){
+              hissatsu = hissatsu - selected_card.hissatsu.cost;
+              
+              //use card
+              if(selected_card.hissatsu.type == "atk"){
+                enemy_health = enemy_health - selected_card.hissatsu.effect;
+                if(enemy_health <= 0){
+                 game_state = "win";
+                }
+              }
+              else{
+                shield = shield + selected_card.hissatsu.effect;
+              }
+              
+              discard.push(selected_card.hissatsu); //mets la carte dans la défausse
+              cards.splice(selected_card_id, 1); //supprime la carte de la main
+              
+              total_cards_width = rel_card_width * cards.length + rel_cards_spacing * (nb_cards_hand - 1);
+              rel_card_x = (window_width / 2) - total_cards_width / 2;
+              enemy_health_bar = rectangle(rel_player_x * 2 + 18 - window_width*0.05/2, rel_player_y - 55, window_width*0.05*(enemy_health/max_enemy_health), window_width*0.005, window_width*0.001, "red");
+            } 
+        }
         // si user clique dans la zone des cartes, annule la selection
         selected_card = null;
         selected_card_id = null;
@@ -339,19 +419,13 @@ function draw_game() {
     }
 
   }
-  else{
-  //enemy turn
+  else if(game_state == "enemy_turn"){
 
     
   }
-  setCanvasFont(font, window_width * 0.02 + "pt", "bold");
-  Texte(blue_fire_tiles.sprite_width * 0.8 / 2 - window_width * 0.02 / 2, window_height - 50, hissatsu, orange);
-  
-  Texte(blue_fire_tiles.sprite_width * 0.8 + window_width * 0.02 / 2, window_height - 50, health, orange);
-  
-  enemy_health_bar_complete.draw();
-  enemy_health_bar.draw();
-  
+  else if(game_state == "win"){
+    
+  }
 }
 
 // main loop
