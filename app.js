@@ -245,6 +245,8 @@ var ball_x = rel_player_x + 100;
 var ball_y = rel_player_y + 40;
 var ball_speed = 40;
 
+var deck_rectangle = rectangle(blue_fire_tiles.sprite_width * 0.8 + 10, window_height - 50*1.62*1.5, 50, 50*1.62, 10, orange);
+
 var discard = [];
 var deck = [hissatsu("Tempete de feu", 3, "atk", 5), hissatsu("Tempete de feu", 3, "atk", 5), hissatsu("Tempete de feu", 3, "atk", 5), hissatsu("Blizzard eternel", 1, "atk", 2), hissatsu("Blizzard eternel", 1, "atk", 2), hissatsu("Blizzard eternel", 1, "atk", 2), hissatsu("Tornade du dragon", 3, "atk", 4), hissatsu("Tornade du dragon", 3, "atk", 4), hissatsu("Tornade du dragon", 3, "atk", 4), hissatsu("Tornade du dragon", 3, "atk", 4), hissatsu("Feu glacé", 4, "atk", 9), hissatsu("Feu glacé", 4, "atk", 9), hissatsu("Feu glacé", 4, "atk", 9), hissatsu("Main celeste", 2, "def", 4), hissatsu("Main celeste", 2, "def", 4), hissatsu("Main celeste", 2, "def", 4), hissatsu("Main Magique", 3, "def", 7), hissatsu("Main Magique", 3, "def", 7), hissatsu("Main Magique", 3, "def", 7)];
 
@@ -284,7 +286,6 @@ var selected_x_offset = null;
 var selected_y_offset = null;
 var deselect_time = 100;
 var can_deselect = false;
-
 
 
 // Game variables defintions
@@ -330,6 +331,10 @@ function draw_game() {
 
   setCanvasFont(font, window_width * 0.02 + "pt", "bold");
   Texte(blue_fire_tiles.sprite_width * 0.8 / 2 - window_width * 0.02 / 2, window_height - 50, hissatsu, orange);
+  
+  deck_rectangle.draw();
+  setCanvasFont(font, window_width * 0.01 + "pt", "bold");
+  Texte(blue_fire_tiles.sprite_width * 0.8 + 20, window_height - 70, deck.length, 'white');
 
   health_bar_complete.draw();
   health_bar.draw();
@@ -338,6 +343,8 @@ function draw_game() {
   enemy_health_bar.draw();
 
   DrawImageObject(ball_img, ball_x, ball_y, 24, 24);
+  
+  
 
 
   if (game_state == "player_turn") {
