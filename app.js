@@ -245,7 +245,9 @@ var ball_x = rel_player_x + 100;
 var ball_y = rel_player_y + 40;
 var ball_speed = 40;
 
-var deck_rectangle = rectangle(blue_fire_tiles.sprite_width * 0.8 + 10, window_height - 50*1.62*1.5, 50, 50*1.62, 10, orange);
+var shield_img = PreloadImage(readFile("Data/shield.png"));
+
+var deck_rectangle = rectangle(blue_fire_tiles.sprite_width * 0.8 + 10, window_height - 50 * 1.62 * 1.5, 50, 50 * 1.62, 10, orange);
 
 var discard = [];
 var deck = [hissatsu("Tempete de feu", 3, "atk", 5), hissatsu("Tempete de feu", 3, "atk", 5), hissatsu("Tempete de feu", 3, "atk", 5), hissatsu("Blizzard eternel", 1, "atk", 2), hissatsu("Blizzard eternel", 1, "atk", 2), hissatsu("Blizzard eternel", 1, "atk", 2), hissatsu("Tornade du dragon", 3, "atk", 4), hissatsu("Tornade du dragon", 3, "atk", 4), hissatsu("Tornade du dragon", 3, "atk", 4), hissatsu("Tornade du dragon", 3, "atk", 4), hissatsu("Feu glacé", 4, "atk", 9), hissatsu("Feu glacé", 4, "atk", 9), hissatsu("Feu glacé", 4, "atk", 9), hissatsu("Main celeste", 2, "def", 4), hissatsu("Main celeste", 2, "def", 4), hissatsu("Main celeste", 2, "def", 4), hissatsu("Main Magique", 3, "def", 7), hissatsu("Main Magique", 3, "def", 7), hissatsu("Main Magique", 3, "def", 7)];
@@ -331,7 +333,7 @@ function draw_game() {
 
   setCanvasFont(font, window_width * 0.02 + "pt", "bold");
   Texte(blue_fire_tiles.sprite_width * 0.8 / 2 - window_width * 0.02 / 2, window_height - 50, hissatsu, orange);
-  
+
   deck_rectangle.draw();
   setCanvasFont(font, window_width * 0.01 + "pt", "bold");
   Texte(blue_fire_tiles.sprite_width * 0.8 + 20, window_height - 70, deck.length, 'white');
@@ -339,17 +341,25 @@ function draw_game() {
   health_bar_complete.draw();
   health_bar.draw();
 
+
+  if (shield > 0) {
+    DrawImageObject(shield_img, rel_player_x + 18 + window_width * 0.05 / 2 + 10, rel_player_y - 70, 69 / 2, 84 / 2);
+    setCanvasFont(font, window_width * 0.007 + "pt", "bold");
+    Texte(rel_player_x + 18 + window_width * 0.05 / 2 + 20, rel_player_y - 45, shield, 'white');
+  }
+
   enemy_health_bar_complete.draw();
   enemy_health_bar.draw();
 
   DrawImageObject(ball_img, ball_x, ball_y, 24, 24);
   
-  
-
 
   if (game_state == "player_turn") {
     setCanvasFont(font, window_width * 0.02 + "pt", "bold");
     Texte(window_width / 2 - 100, 50, "Votre Tour", orange);
+    
+    setCanvasFont(font, window_width * 0.01 + "pt", "bold");
+    Texte(window_width*0.8, window_height*0.9, "Fin Tour", "red");
 
     if (ball_animation == "line") {
       ball_x = ball_x + ball_speed;
@@ -358,7 +368,7 @@ function draw_game() {
       }
     }
     if (ball_animation == "lob") {
-      ball_x = ball_x - ball_speed/2;
+      ball_x = ball_x - ball_speed / 2;
       ball_y = rel_player_y + 40 + 1 / 600 * (ball_x - (rel_player_x + 100)) * (ball_x - (rel_player_x * 2 - 50));
       if (ball_x < rel_player_x + 100) {
         ball_x = rel_player_x + 100;
