@@ -534,7 +534,7 @@ function draw_game() {
         health = health - atk.effect;
       }
 
-      if (health < 0) {
+      if (health <= 0) {
         health = 0;
         game_state = "lose";
       }
