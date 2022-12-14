@@ -232,8 +232,6 @@ function start_player_round() {
     shuffleArray(deck);
   }
 
-  console.log(deck)
-
   nb_cards_hand = 5;
   total_cards_width = rel_card_width * nb_cards_hand + rel_cards_spacing * (nb_cards_hand - 1);
   rel_card_x = (window_width / 2) - total_cards_width / 2;
@@ -260,11 +258,11 @@ var background_menu = PreloadImage("https://fs-prod-cdn.nintendo-europe.com/medi
 var rect_play_button = rectangle(
 window_width / 2 - 100, window_height / 2 - 50, 200, 100, 20, rgba(0, 0, 0, 0.2));
 
-var background_game = PreloadImage(readFile("Data/background.jpg"));
+var background_game = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/background.jpg");
 
 var rect_end_turn_button = rectangle(window_width * 0.8, window_height * 0.85, window_width * 0.07, window_width * 0.07 / 2, window_width * 0.01, rgba(0, 0, 0, 0.2));
 
-var players_images = PreloadImage(readFile("Data/persos.png"));
+var players_images = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/persos.png");
 var rel_player_x = window_width / 3;
 var rel_player_y = window_height * 1.75 / 3;
 var players = [];
@@ -278,17 +276,17 @@ players.push(personnages(rel_player_x * 2 - 50, rel_player_y, 7));
 players.push(personnages(rel_player_x * 2 + 50, rel_player_y, 8));
 players.push(personnages(rel_player_x * 2, rel_player_y + 35, 9));
 
-var blue_fire_img = PreloadImage(readFile("Data/blue-fire.png"));
+var blue_fire_img = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/blue-fire.png");
 var blue_fire_tiles = animated_tilemap(blue_fire_img, 6);
 var blue_fire = animated_sprite(blue_fire_tiles, 0, window_height - blue_fire_img.height * 0.8 - 10, 0.8, 120);
 
-var ball_img = PreloadImage(readFile("Data/ball.png"));
+var ball_img = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/ball.png");
 var ball_animation = "steady";
 var ball_x = rel_player_x + 100;
 var ball_y = rel_player_y + 40;
 var ball_speed = 40;
 
-var shield_img = PreloadImage(readFile("Data/shield.png"));
+var shield_img = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/shield.png");
 
 var deck_rectangle = rectangle(blue_fire_tiles.sprite_width * 0.8 + 10, window_height - 50 * 1.62 * 1.5, 50, 50 * 1.62, 10, orange);
 
@@ -523,7 +521,6 @@ function draw_game() {
     }
     if (enemy_state == "do_atk") {
       atk = enemy_atks.pop();
-      console.log(atk);
       ball_animation = "line";
 
       if (shield > 0) {
@@ -618,4 +615,4 @@ function game() {
   }, 1000 / 60);
 }
 
-setTimeout(game(), 1000);
+WaitPreload(game);
