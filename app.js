@@ -180,7 +180,7 @@ function personnages(x, y, nbImage) {
   return obj;
 }
 
-function hissatsu(name, cost, type, effect) {
+function hissatsu_obj(name, cost, type, effect) {
   obj = {
     name: name,
     cost: cost,
@@ -203,6 +203,47 @@ function shuffleArray(array) {
   }
 }
 
+var hissatsus_atk = [hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Blizzard eternel", 1, "atk", 2), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Feu glacé", 4, "atk", 9)];
+
+function create_enemyAttacks() {
+  enemy_atks = [];
+  var nb_atks = Hasard(3) + 1;
+  for (i = 0; i < nb_atks; i++) {
+    enemy_atks.push(hissatsus_atk[Hasard(hissatsus_atk.length)]);
+  }
+}
+
+function start_player_round() {
+  ball_x = rel_player_x + 100;
+  hissatsu = max_hissatsu;
+
+  while (cards.length > 0) {
+    discard.push(cards.pop().hissatsu);
+  }
+
+  if (deck.length == 0) {
+    deck = discard.slice();
+    discard = [];
+    shuffleArray(deck);
+    shuffleArray(deck);
+    shuffleArray(deck);
+    shuffleArray(deck);
+    shuffleArray(deck);
+    shuffleArray(deck);
+  }
+
+  console.log(deck)
+
+  nb_cards_hand = 5;
+  total_cards_width = rel_card_width * nb_cards_hand + rel_cards_spacing * (nb_cards_hand - 1);
+  rel_card_x = (window_width / 2) - total_cards_width / 2;
+
+  for (i = 0; i < 5; i++) {
+    cards.push(card(rel_card_x + rel_card_width * i + rel_cards_spacing * i, rel_card_y, rel_card_width, rel_card_height, rel_card_radius, rel_card_spacing, 'default', deck.pop()));
+  }
+
+  nb_cards_hand = cards.length;
+}
 
 // variables definitions
 var mouse_clicked = null;
@@ -220,6 +261,8 @@ var rect_play_button = rectangle(
 window_width / 2 - 100, window_height / 2 - 50, 200, 100, 20, rgba(0, 0, 0, 0.2));
 
 var background_game = PreloadImage(readFile("Data/background.jpg"));
+
+var rect_end_turn_button = rectangle(window_width * 0.8, window_height * 0.85, window_width * 0.07, window_width * 0.07 / 2, window_width * 0.01, rgba(0, 0, 0, 0.2));
 
 var players_images = PreloadImage(readFile("Data/persos.png"));
 var rel_player_x = window_width / 3;
@@ -250,7 +293,7 @@ var shield_img = PreloadImage(readFile("Data/shield.png"));
 var deck_rectangle = rectangle(blue_fire_tiles.sprite_width * 0.8 + 10, window_height - 50 * 1.62 * 1.5, 50, 50 * 1.62, 10, orange);
 
 var discard = [];
-var deck = [hissatsu("Tempete de feu", 3, "atk", 5), hissatsu("Tempete de feu", 3, "atk", 5), hissatsu("Tempete de feu", 3, "atk", 5), hissatsu("Blizzard eternel", 1, "atk", 2), hissatsu("Blizzard eternel", 1, "atk", 2), hissatsu("Blizzard eternel", 1, "atk", 2), hissatsu("Tornade du dragon", 3, "atk", 4), hissatsu("Tornade du dragon", 3, "atk", 4), hissatsu("Tornade du dragon", 3, "atk", 4), hissatsu("Tornade du dragon", 3, "atk", 4), hissatsu("Feu glacé", 4, "atk", 9), hissatsu("Feu glacé", 4, "atk", 9), hissatsu("Feu glacé", 4, "atk", 9), hissatsu("Main celeste", 2, "def", 4), hissatsu("Main celeste", 2, "def", 4), hissatsu("Main celeste", 2, "def", 4), hissatsu("Main Magique", 3, "def", 7), hissatsu("Main Magique", 3, "def", 7), hissatsu("Main Magique", 3, "def", 7)];
+var deck = [hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Blizzard eternel", 1, "atk", 2), hissatsu_obj("Blizzard eternel", 1, "atk", 2), hissatsu_obj("Blizzard eternel", 1, "atk", 2), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Feu glacé", 4, "atk", 9), hissatsu_obj("Feu glacé", 4, "atk", 9), hissatsu_obj("Feu glacé", 4, "atk", 9), hissatsu_obj("Main celeste", 2, "def", 4), hissatsu_obj("Main celeste", 2, "def", 4), hissatsu_obj("Main celeste", 2, "def", 4), hissatsu_obj("Main Magique", 3, "def", 7), hissatsu_obj("Main Magique", 3, "def", 7), hissatsu_obj("Main Magique", 3, "def", 7)];
 
 shuffleArray(deck);
 shuffleArray(deck);
@@ -293,8 +336,8 @@ var can_deselect = false;
 // Game variables defintions
 var health = 40;
 var max_health = 40;
-var hissatsu = 5;
-var max_hissatsu = 5;
+var hissatsu = 8;
+var max_hissatsu = 8;
 var shield = 0;
 
 var health_bar_outline = 2;
@@ -303,11 +346,15 @@ var health_bar_complete = rectangle(rel_player_x + 18 - window_width * 0.05 / 2 
 
 var enemy_health = 40;
 var max_enemy_health = 40;
-var enemy_hissatsu = 5;
-var max_enemy_hissatsu = 5;
+
+var enemy_atks = [];
+var enemy_state = "do_atk";
 
 var enemy_health_bar = rectangle(rel_player_x * 2 + 18 - window_width * 0.05 / 2, rel_player_y - 55, window_width * 0.05 * (enemy_health / max_enemy_health), window_width * 0.005, window_width * 0.001, "red");
 var enemy_health_bar_complete = rectangle(rel_player_x * 2 + 18 - window_width * 0.05 / 2 - health_bar_outline, rel_player_y - 55 - health_bar_outline, window_width * 0.05 + health_bar_outline * 2, window_width * 0.005 + health_bar_outline * 2, window_width * 0.001, "black");
+
+var txt_size = null;
+var text_height = null;
 
 function draw_menu() {
   DrawImageObject(background_menu, 0, 0, window_width, window_height);
@@ -319,7 +366,8 @@ function draw_menu() {
   rect_play_button.draw();
 
   setCanvasFont(font, window_width * 0.02 + "pt", "bold");
-  Texte(window_width / 2 - 70, window_height / 2 + 15, "Jouer", "white");
+  txt_size = ctx.measureText("Jouer");
+  Texte(window_width / 2 - txt_size.width/2, window_height / 2 + 15, "Jouer", "white");
 }
 
 function draw_game() {
@@ -352,14 +400,23 @@ function draw_game() {
   enemy_health_bar.draw();
 
   DrawImageObject(ball_img, ball_x, ball_y, 24, 24);
-  
+
 
   if (game_state == "player_turn") {
     setCanvasFont(font, window_width * 0.02 + "pt", "bold");
-    Texte(window_width / 2 - 100, 50, "Votre Tour", orange);
-    
+    txt_size = ctx.measureText("Votre Tour");
+    Texte(window_width / 2 - txt_size.width / 2, 50, "Votre Tour", orange);
+
+    rect_end_turn_button.color = rgba(0, 0, 0, 0.2);
+    if (rect_end_turn_button.collide_with_mouse()) {
+      rect_end_turn_button.color = rgba(0, 0, 0, 0.4);
+    }
+
+    rect_end_turn_button.draw();
     setCanvasFont(font, window_width * 0.01 + "pt", "bold");
-    Texte(window_width*0.8, window_height*0.9, "Fin Tour", "red");
+    txt_size = ctx.measureText("Fin Tour");
+    text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
+    Texte(rect_end_turn_button.x + rect_end_turn_button.width / 2 - txt_size.width / 2, rect_end_turn_button.y + rect_end_turn_button.height / 2 + text_height / 3, "Fin Tour", "red");
 
     if (ball_animation == "line") {
       ball_x = ball_x + ball_speed;
@@ -417,6 +474,7 @@ function draw_game() {
             if (selected_card.hissatsu.type == "atk") {
               enemy_health = enemy_health - selected_card.hissatsu.effect;
               if (enemy_health <= 0) {
+                enemy_health = 0;
                 game_state = "win";
               }
 
@@ -442,9 +500,78 @@ function draw_game() {
 
   } else if (game_state == "enemy_turn") {
 
+    if (ball_animation == "line") {
+      ball_x = ball_x - ball_speed;
+      if (ball_x < rel_player_x + 50) {
+        ball_animation = "lob";
+      }
+    }
+    if (ball_animation == "lob") {
+      ball_x = ball_x + ball_speed / 2;
+      ball_y = rel_player_y + 40 + 1 / 600 * (ball_x - (rel_player_x + 50)) * (ball_x - (rel_player_x * 2 - 100));
+      if (ball_x > rel_player_x * 2 - 100) {
+        ball_x = rel_player_x * 2 - 100;
+        ball_animation = "steady";
+      }
+    }
+
+    if (enemy_state == "first_wait") {
+      enemy_state = "wait";
+      setTimeout(function() {
+        enemy_state = "do_atk";
+      }, 1000);
+    }
+    if (enemy_state == "do_atk") {
+      atk = enemy_atks.pop();
+      console.log(atk);
+      ball_animation = "line";
+
+      if (shield > 0) {
+        shield = shield - atk.effect;
+        if (shield < 0) {
+          health = health + shield;
+          shield = 0;
+        }
+
+      } else {
+        health = health - atk.effect;
+      }
+
+      if (health < 0) {
+        health = 0;
+        game_state = "lose";
+      }
+
+      health_bar = rectangle(rel_player_x + 18 - window_width * 0.05 / 2, rel_player_y - 55, window_width * 0.05 * (health / max_health), window_width * 0.005, window_width * 0.001, "red");
+
+      if (game_state != "lose") {
+        enemy_state = "wait";
+        if (enemy_atks.length > 0) {
+          setTimeout(function() {
+            enemy_state = "do_atk";
+          }, 1000);
+        } else {
+          start_player_round();
+          setTimeout(function() {
+            game_state = "player_turn";
+          }, 1000);
+        }
+      }
+    }
+
 
   } else if (game_state == "win") {
+    setCanvasFont(font, window_width * 0.03 + "pt", "bold");
+    txt_size = ctx.measureText("Vous avez gagné !");
+    text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
+    Texte(window_width / 2 - txt_size.width / 2, window_height / 3 + text_height / 3, "Vous avez gagné !", orange);
 
+  }
+  else if (game_state == "lose") {
+	setCanvasFont(font, window_width * 0.03 + "pt", "bold");
+    txt_size = ctx.measureText("Vous avez perdu !");
+    text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
+    Texte(window_width / 2 - txt_size.width / 2, window_height / 3 + text_height / 3, "Vous avez perdu !", orange);
   }
 }
 
@@ -462,10 +589,16 @@ function game() {
       if (rect_play_button.collide_with_mouse() && mouse_clicked) {
         game_state = "player_turn";
       }
-    } else if (game_state == "player_turn" || game_state == "enemy_turn") {
+    } else if (game_state == "player_turn" || game_state == "enemy_turn" || game_state == "win" || game_state == "lose") {
       draw_game();
 
       //interactions
+      if (rect_end_turn_button.collide_with_mouse() && mouse_clicked) {
+        game_state = "enemy_turn";
+        create_enemyAttacks();
+        enemy_state = "first_wait";
+        ball_x = rel_player_x * 2 - 100;
+      }
     }
 
     rect_fin_jeu.draw();
