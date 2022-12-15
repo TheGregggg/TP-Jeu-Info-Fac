@@ -310,6 +310,9 @@ var ball_x = rel_player_x + 100;
 var ball_y = rel_player_y + 40;
 var ball_speed = 40;
 
+var ecran_loose = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/Ecran_loose.png");
+var ecran_win = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/ecran_win.png");
+
 var shield_img = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/shield.png");
 
 var deck_rectangle = rectangle(blue_fire_tiles.sprite_width * 0.8 + 10, window_height - 50 * 1.62 * 1.5, 50, 50 * 1.62, 10, orange);
@@ -588,10 +591,35 @@ function draw_game() {
 
 
   } else if (game_state == "win") {
+    DrawImageObject(ecran_win, 0, 0, window_width, window_height);
     setCanvasFont(font, window_width * 0.03 + "pt", "bold");
     txt_size = ctx.measureText("Vous avez gagné !");
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
-    Texte(window_width / 2 - txt_size.width / 2, window_height / 3 + text_height / 3, "Vous avez gagné !", orange);
+    Texte(window_width / 2 - txt_size.width / 2, 50, "Vous avez gagné !", orange);
+
+     if (ball_animation == "line") {
+      ball_x = ball_x - ball_speed;
+      if (ball_x < rel_player_x + 50) {
+        ball_animation = "lob";
+        activate_screen_shake();
+      }
+    }
+    if (ball_animation == "lob") {
+      ball_x = ball_x + ball_speed / 2;
+      ball_y = rel_player_y + 40 + 1 / 600 * (ball_x - (rel_player_x + 50)) * (ball_x - (rel_player_x * 2 - 100));
+      if (ball_x > rel_player_x * 2 - 100) {
+        ball_x = rel_player_x * 2 - 100;
+        ball_animation = "steady";
+      }
+    } 
+
+  
+  } else if (game_state == "lose") {
+    DrawImageObject(ecran_loose, 0, 0, window_width, window_height);
+    setCanvasFont(font, window_width * 0.03 + "pt", "bold");
+    txt_size = ctx.measureText("Vous avez perdu !");
+    text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
+    Texte(window_width / 2 - txt_size.width / 2, 50, "Vous avez perdu !", orange);
     
      if (ball_animation == "line") {
       ball_x = ball_x + ball_speed;
@@ -608,29 +636,6 @@ function draw_game() {
         ball_animation = "steady";
       }
     }
-
-  
-  } else if (game_state == "lose") {
-  setCanvasFont(font, window_width * 0.03 + "pt", "bold");
-    txt_size = ctx.measureText("Vous avez perdu !");
-    text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
-    Texte(window_width / 2 - txt_size.width / 2, window_height / 3 + text_height / 3, "Vous avez perdu !", orange);
-    
-    if (ball_animation == "line") {
-      ball_x = ball_x - ball_speed;
-      if (ball_x < rel_player_x + 50) {
-        ball_animation = "lob";
-        activate_screen_shake();
-      }
-    }
-    if (ball_animation == "lob") {
-      ball_x = ball_x + ball_speed / 2;
-      ball_y = rel_player_y + 40 + 1 / 600 * (ball_x - (rel_player_x + 50)) * (ball_x - (rel_player_x * 2 - 100));
-      if (ball_x > rel_player_x * 2 - 100) {
-        ball_x = rel_player_x * 2 - 100;
-        ball_animation = "steady";
-      }
-    } 
   }
 }
 
@@ -640,7 +645,7 @@ function game() {
   game_loop = setInterval(function() {
     //drawings
     ctx.clearRect(0, 0, window_width, window_height);
-    
+
     if (screen_shake){
       preShake();
     }
@@ -657,7 +662,7 @@ function game() {
       draw_game();
 
       //interactions
-      if (game_state == "player_turn" && rect_end_turn_button.collide_with_mouse() && mouse_clicked) {
+      if (rect_end_turn_button.collide_with_mouse() && mouse_clicked && game_state == "player_turn") {
         game_state = "enemy_turn";
         create_enemyAttacks();
         enemy_state = "first_wait";
@@ -676,12 +681,12 @@ function game() {
       });
       clearInterval(blue_fire.anim);
       clearInterval(game_loop);
+
     }
-    
+
     if (screen_shake){
       postShake();
     }
-    
 
     mouse_clicked = false;
   }, 1000 / 60);
