@@ -221,7 +221,7 @@ function shuffleArray(array) {
   }
 }
 
-var hissatsus_atk = [hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Blizzard eternel", 1, "atk", 2), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Feu glacé", 4, "atk", 9)];
+var hissatsus_atk = [hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Blizzard eternel", 1, "atk", 2), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Feu glacé", 4, "atk", 9), hissatsu_obj("Blizzard éternel", 3, "atk", 7)];
 
 function create_enemyAttacks() {
   enemy_atks = [];
@@ -322,7 +322,7 @@ var shield_img = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-J
 var deck_rectangle = rectangle(blue_fire_tiles.sprite_width * 0.8 + 10, window_height - 50 * 1.62 * 1.5, 50, 50 * 1.62, 10, orange);
 
 var discard = [];
-var deck = [hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Blizzard eternel", 1, "atk", 2), hissatsu_obj("Blizzard eternel", 1, "atk", 2), hissatsu_obj("Blizzard eternel", 1, "atk", 2), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Feu glacé", 4, "atk", 9), hissatsu_obj("Feu glacé", 4, "atk", 9), hissatsu_obj("Feu glacé", 4, "atk", 9), hissatsu_obj("Main celeste", 2, "def", 4), hissatsu_obj("Main celeste", 2, "def", 4), hissatsu_obj("Main celeste", 2, "def", 4), hissatsu_obj("Main Magique", 3, "def", 7), hissatsu_obj("Main Magique", 3, "def", 7), hissatsu_obj("Main Magique", 3, "def", 7)];
+var deck = [hissatsu_obj("Ouragan Inazuma", 6, "atk", 15), hissatsu_obj("Triangle de la mort", 4, "atk", 8), hissatsu_obj("Triangle de la mort", 4, "atk", 8), hissatsu_obj("La Terre", 5, "atk", 12), hissatsu_obj("Arrêt céleste", 5, "def", 15), hissatsu_obj("Trou de ver", 4, "def", 10), hissatsu_obj("Trou de ver", 4, "def", 10), hissatsu_obj("Mains de l'infini", 4, "def", 8), hissatsu_obj("Mains de l'infini", 4, "def", 8), hissatsu_obj("Mains de l'infini", 4, "def", 8), hissatsu_obj("Tir spiral", 1, "atk", 1), hissatsu_obj("Tir spiral", 1, "atk", 1), hissatsu_obj("Tir spiral", 1, "atk", 1), hissatsu_obj("Tir spiral", 1, "atk", 1), hissatsu_obj("Tir spiral", 1, "atk", 1), hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Blizzard eternel", 1, "atk", 2), hissatsu_obj("Blizzard eternel", 1, "atk", 2), hissatsu_obj("Blizzard eternel", 1, "atk", 2), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Feu glacé", 4, "atk", 9), hissatsu_obj("Feu glacé", 4, "atk", 9), hissatsu_obj("Feu glacé", 4, "atk", 9), hissatsu_obj("Main celeste", 2, "def", 4), hissatsu_obj("Main celeste", 2, "def", 4), hissatsu_obj("Main celeste", 2, "def", 4), hissatsu_obj("Main Magique", 3, "def", 7), hissatsu_obj("Main Magique", 3, "def", 7), hissatsu_obj("Main Magique", 3, "def", 7)];
 
 shuffleArray(deck);
 shuffleArray(deck);
@@ -630,7 +630,7 @@ function draw_game() {
     setCanvasFont(font, window_width * 0.03 + "pt", "bold");
     txt_size = ctx.measureText("Vous avez perdu !");
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
-    Texte(window_width / 2 - txt_size.width / 2, window_height*0.08, "Vous avez perdu !", orange);
+    Texte(window_width / 2 - txt_size.width / 2, 50, "Vous avez perdu !", orange);
     
      if (ball_animation == "line") {
       ball_x = ball_x + ball_speed;
@@ -656,6 +656,7 @@ function game() {
   game_loop = setInterval(function() {
     //drawings
     ctx.clearRect(0, 0, window_width, window_height);
+
     if (screen_shake){
       preShake();
     }
