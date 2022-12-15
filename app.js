@@ -604,7 +604,7 @@ function draw_game() {
     setCanvasFont(font, window_width * 0.03 + "pt", "bold");
     txt_size = ctx.measureText("Vous avez gagné !");
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
-    Texte(window_width / 2 - txt_size.width / 2, 50, "Vous avez gagné !", orange);
+    Texte(window_width / 2 - txt_size.width / 2, window_height*0.08, "Vous avez gagné !", orange);
 
      if (ball_animation == "line") {
       ball_x = ball_x - ball_speed;
@@ -628,7 +628,7 @@ function draw_game() {
     setCanvasFont(font, window_width * 0.03 + "pt", "bold");
     txt_size = ctx.measureText("Vous avez perdu !");
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
-    Texte(window_width / 2 - txt_size.width / 2, 50, "Vous avez perdu !", orange);
+    Texte(window_width / 2 - txt_size.width / 2, window_height*0.08, "Vous avez perdu !", orange);
     
      if (ball_animation == "line") {
       ball_x = ball_x + ball_speed;
