@@ -4,6 +4,25 @@ Initialiser();
 var font = PreloadGooglefont("'Audiowide', cursive");
 var orange = rgb(255, 143, 23);
 
+var shake_magnitude = 3;
+function preShake() {
+  ctx.save();
+  var dx = Math.random()*10;
+  var dy = Math.random()*10;
+  ctx.translate(dx, dy);  
+}
+
+function postShake() {
+  ctx.restore();
+}
+
+function activate_screen_shake(){
+  screen_shake = true;
+  setTimeout(function() {
+    screen_shake = false;
+  }, 50);
+}
+
 // 'POO' définitions
 
 function rectangle(x, y, width, height, radius, color) {
@@ -258,6 +277,8 @@ window_width - 30, window_height - 30, 30, 30, 0, "red");
 
 var game_state = "menu";
 
+var screen_shake = false;
+
 var background_menu = PreloadImage("https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/portals_3/H2x1_CharacterHub_InazumaEleven_image1600w.jpg");
 var rect_play_button = rectangle(
 window_width / 2 - 100, window_height / 2 - 50, 200, 100, 20, rgba(0, 0, 0, 0.2));
@@ -425,6 +446,7 @@ function draw_game() {
       ball_x = ball_x + ball_speed;
       if (ball_x > rel_player_x * 2 - 50) {
         ball_animation = "lob";
+        activate_screen_shake();
       }
     }
     if (ball_animation == "lob") {
@@ -507,6 +529,7 @@ function draw_game() {
       ball_x = ball_x - ball_speed;
       if (ball_x < rel_player_x + 50) {
         ball_animation = "lob";
+        activate_screen_shake();
       }
     }
     if (ball_animation == "lob") {
@@ -575,6 +598,7 @@ function draw_game() {
       ball_x = ball_x + ball_speed;
       if (ball_x > rel_player_x * 2 - 50) {
         ball_animation = "lob";
+        activate_screen_shake();
       }
     }
     if (ball_animation == "lob") {
@@ -597,6 +621,7 @@ function draw_game() {
       ball_x = ball_x - ball_speed;
       if (ball_x < rel_player_x + 50) {
         ball_animation = "lob";
+        activate_screen_shake();
       }
     }
     if (ball_animation == "lob") {
@@ -616,6 +641,11 @@ function game() {
   game_loop = setInterval(function() {
     //drawings
     ctx.clearRect(0, 0, window_width, window_height);
+    
+    if (screen_shake){
+      preShake();
+    }
+    
 
     if (game_state == "menu") {
       draw_menu();
@@ -648,6 +678,11 @@ function game() {
       clearInterval(blue_fire.anim);
       clearInterval(game_loop);
     }
+    
+    if (screen_shake){
+      postShake();
+    }
+    
 
     mouse_clicked = false;
   }, 1000 / 60);
