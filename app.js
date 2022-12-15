@@ -4,7 +4,6 @@ Initialiser();
 var font = PreloadGooglefont("'Audiowide', cursive");
 var orange = rgb(255, 143, 23);
 
-var shake_magnitude = 3;
 function preShake() {
   ctx.save();
   var dx = Math.random()*10;
@@ -20,7 +19,7 @@ function activate_screen_shake(){
   screen_shake = true;
   setTimeout(function() {
     screen_shake = false;
-  }, 50);
+  }, 100);
 }
 
 // 'POO' définitions
