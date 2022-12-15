@@ -335,10 +335,11 @@ var nb_cards_hand = 5;
 
 var rel_card_y = window_height * 5 / 6;
 var rel_cards_spacing = window_width * 0.002;
+var rel_card_width = window_width * 0.09;
 
 var total_cards_width = rel_card_width * nb_cards_hand + rel_cards_spacing * (nb_cards_hand - 1);
 
-var rel_card_width = window_width * 0.09;
+
 var rel_card_height = rel_card_width * 1.2;
 var rel_card_x = (window_width / 2) - total_cards_width / 2;
 var rel_card_radius = window_width * 0.006;
@@ -655,7 +656,6 @@ function game() {
   game_loop = setInterval(function() {
     //drawings
     ctx.clearRect(0, 0, window_width, window_height);
-
     if (screen_shake){
       preShake();
     }
@@ -702,4 +702,4 @@ function game() {
   }, 1000 / 60);
 }
 
-WaitPreload(game);
+setTimeout(game,2000);
