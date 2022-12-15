@@ -215,7 +215,11 @@ function create_enemyAttacks() {
 
 function start_player_round() {
   ball_x = rel_player_x + 100;
-  hissatsu = max_hissatsu;
+  if (hissatsu + hissatsu_state > max_hissatsu) {
+    hissatsu_state = max_hissatsu;
+  } else {
+    hissatsu_state = hissatsu + hissatsu_state;
+  }
 
   while (cards.length > 0) {
     discard.push(cards.pop().hissatsu);
@@ -334,8 +338,9 @@ var can_deselect = false;
 // Game variables defintions
 var health = 40;
 var max_health = 40;
-var hissatsu = 8;
-var max_hissatsu = 8;
+var hissatsu = 5;
+var max_hissatsu = 6;
+var hissatsu_state = 5;
 var shield = 0;
 
 var health_bar_outline = 2;
@@ -378,7 +383,7 @@ function draw_game() {
   blue_fire.draw();
 
   setCanvasFont(font, window_width * 0.02 + "pt", "bold");
-  Texte(blue_fire_tiles.sprite_width * 0.8 / 2 - window_width * 0.02 / 2, window_height - 50, hissatsu, orange);
+  Texte(blue_fire_tiles.sprite_width * 0.8 / 2 - window_width * 0.02 / 2, window_height - 50, hissatsu_state, orange);
 
   deck_rectangle.draw();
   setCanvasFont(font, window_width * 0.01 + "pt", "bold");
@@ -465,8 +470,8 @@ function draw_game() {
       if (mouse_clicked && can_deselect) {
         if (mouseY < rel_card_y * 0.8 || mouseX < rel_card_x * 0.8 || mouseX > rel_card_x + total_cards_width * 1.2) {
           // si user clique dans la zone de jeu, utilise la carte
-          if (selected_card.hissatsu.cost <= hissatsu) {
-            hissatsu = hissatsu - selected_card.hissatsu.cost;
+          if (selected_card.hissatsu.cost <= hissatsu_state) {
+            hissatsu_state = hissatsu_state - selected_card.hissatsu.cost;
 
             //use card
             if (selected_card.hissatsu.type == "atk") {
@@ -511,7 +516,8 @@ function draw_game() {
         ball_x = rel_player_x * 2 - 100;
         ball_animation = "steady";
       }
-    }
+    } 
+
 
     if (enemy_state == "first_wait") {
       enemy_state = "wait";
@@ -550,11 +556,13 @@ function draw_game() {
         } else {
           start_player_round();
           setTimeout(function() {
+            ball_x = rel_player_x + 100;
             game_state = "player_turn";
           }, 1000);
         }
       }
-    }
+    } 
+    
 
 
   } else if (game_state == "win") {
@@ -563,9 +571,9 @@ function draw_game() {
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
     Texte(window_width / 2 - txt_size.width / 2, window_height / 3 + text_height / 3, "Vous avez gagné !", orange);
 
-  }
-  else if (game_state == "lose") {
-	setCanvasFont(font, window_width * 0.03 + "pt", "bold");
+  
+  } else if (game_state == "lose") {
+  setCanvasFont(font, window_width * 0.03 + "pt", "bold");
     txt_size = ctx.measureText("Vous avez perdu !");
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
     Texte(window_width / 2 - txt_size.width / 2, window_height / 3 + text_height / 3, "Vous avez perdu !", orange);
