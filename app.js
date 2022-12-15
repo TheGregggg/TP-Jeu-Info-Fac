@@ -4,24 +4,6 @@ Initialiser();
 var font = PreloadGooglefont("'Audiowide', cursive");
 var orange = rgb(255, 143, 23);
 
-function preShake() {
-  ctx.save();
-  var dx = Math.random()*10;
-  var dy = Math.random()*10;
-  ctx.translate(dx, dy);  
-}
-
-function postShake() {
-  ctx.restore();
-}
-
-function activate_screen_shake(){
-  screen_shake = true;
-  setTimeout(function() {
-    screen_shake = false;
-  }, 100);
-}
-
 // 'POO' définitions
 
 function rectangle(x, y, width, height, radius, color) {
@@ -276,8 +258,6 @@ window_width - 30, window_height - 30, 30, 30, 0, "red");
 
 var game_state = "menu";
 
-var screen_shake = false;
-
 var background_menu = PreloadImage("https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/portals_3/H2x1_CharacterHub_InazumaEleven_image1600w.jpg");
 var rect_play_button = rectangle(
 window_width / 2 - 100, window_height / 2 - 50, 200, 100, 20, rgba(0, 0, 0, 0.2));
@@ -309,6 +289,9 @@ var ball_animation = "steady";
 var ball_x = rel_player_x + 100;
 var ball_y = rel_player_y + 40;
 var ball_speed = 40;
+
+var ecran_loose = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/Ecran_loose.png");
+var ecran_win = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/ecran_win.png");
 
 var shield_img = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/shield.png");
 
@@ -445,7 +428,6 @@ function draw_game() {
       ball_x = ball_x + ball_speed;
       if (ball_x > rel_player_x * 2 - 50) {
         ball_animation = "lob";
-        activate_screen_shake();
       }
     }
     if (ball_animation == "lob") {
@@ -528,7 +510,6 @@ function draw_game() {
       ball_x = ball_x - ball_speed;
       if (ball_x < rel_player_x + 50) {
         ball_animation = "lob";
-        activate_screen_shake();
       }
     }
     if (ball_animation == "lob") {
@@ -588,49 +569,20 @@ function draw_game() {
 
 
   } else if (game_state == "win") {
+    DrawImageObject(ecran_win, 0, 0, window_width, window_height);
     setCanvasFont(font, window_width * 0.03 + "pt", "bold");
     txt_size = ctx.measureText("Vous avez gagné !");
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
-    Texte(window_width / 2 - txt_size.width / 2, window_height / 3 + text_height / 3, "Vous avez gagné !", orange);
-    
-     if (ball_animation == "line") {
-      ball_x = ball_x + ball_speed;
-      if (ball_x > rel_player_x * 2 - 50) {
-        ball_animation = "lob";
-        activate_screen_shake();
-      }
-    }
-    if (ball_animation == "lob") {
-      ball_x = ball_x - ball_speed / 2;
-      ball_y = rel_player_y + 40 + 1 / 600 * (ball_x - (rel_player_x + 100)) * (ball_x - (rel_player_x * 2 - 50));
-      if (ball_x < rel_player_x + 100) {
-        ball_x = rel_player_x + 100;
-        ball_animation = "steady";
-      }
-    }
+    Texte(window_width / 2 - txt_size.width / 2, 50, "Vous avez gagné !", orange);
 
   
   } else if (game_state == "lose") {
-  setCanvasFont(font, window_width * 0.03 + "pt", "bold");
+    DrawImageObject(ecran_loose, 0, 0, window_width, window_height);
+    setCanvasFont(font, window_width * 0.03 + "pt", "bold");
     txt_size = ctx.measureText("Vous avez perdu !");
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
-    Texte(window_width / 2 - txt_size.width / 2, window_height / 3 + text_height / 3, "Vous avez perdu !", orange);
+    Texte(window_width / 2 - txt_size.width / 2, 50, "Vous avez perdu !", orange);
     
-    if (ball_animation == "line") {
-      ball_x = ball_x - ball_speed;
-      if (ball_x < rel_player_x + 50) {
-        ball_animation = "lob";
-        activate_screen_shake();
-      }
-    }
-    if (ball_animation == "lob") {
-      ball_x = ball_x + ball_speed / 2;
-      ball_y = rel_player_y + 40 + 1 / 600 * (ball_x - (rel_player_x + 50)) * (ball_x - (rel_player_x * 2 - 100));
-      if (ball_x > rel_player_x * 2 - 100) {
-        ball_x = rel_player_x * 2 - 100;
-        ball_animation = "steady";
-      }
-    } 
   }
 }
 
@@ -640,11 +592,6 @@ function game() {
   game_loop = setInterval(function() {
     //drawings
     ctx.clearRect(0, 0, window_width, window_height);
-    
-    if (screen_shake){
-      preShake();
-    }
-    
 
     if (game_state == "menu") {
       draw_menu();
@@ -657,7 +604,7 @@ function game() {
       draw_game();
 
       //interactions
-      if (game_state == "player_turn" && rect_end_turn_button.collide_with_mouse() && mouse_clicked) {
+      if (rect_end_turn_button.collide_with_mouse() && mouse_clicked && game_state == "player_turn") {
         game_state = "enemy_turn";
         create_enemyAttacks();
         enemy_state = "first_wait";
@@ -677,11 +624,6 @@ function game() {
       clearInterval(blue_fire.anim);
       clearInterval(game_loop);
     }
-    
-    if (screen_shake){
-      postShake();
-    }
-    
 
     mouse_clicked = false;
   }, 1000 / 60);
