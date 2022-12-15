@@ -310,6 +310,10 @@ var ball_x = rel_player_x + 100;
 var ball_y = rel_player_y + 40;
 var ball_speed = 40;
 
+var ball_fire_img = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/flammes_ball.png");
+var ball_fire_tiles = animated_tilemap(ball_fire_img, 61);
+var ball_fire = animated_sprite(ball_fire_tiles, ball_x, ball_y, 1, 20);
+
 var ecran_loose = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/Ecran_loose.png");
 var ecran_win = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/ecran_win.png");
 
@@ -426,6 +430,11 @@ function draw_game() {
   enemy_health_bar.draw();
 
   DrawImageObject(ball_img, ball_x, ball_y, 24, 24);
+  ball_fire.x = ball_x - 39;
+  ball_fire.y = ball_y - 43;
+  if (ball_animation != "steady") {
+    ball_fire.draw();
+  }
 
 
   if (game_state == "player_turn") {
