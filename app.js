@@ -6,16 +6,16 @@ var orange = rgb(255, 143, 23);
 
 function preShake() {
   ctx.save();
-  var dx = Math.random()*10;
-  var dy = Math.random()*10;
-  ctx.translate(dx, dy);  
+  var dx = Math.random() * 10;
+  var dy = Math.random() * 10;
+  ctx.translate(dx, dy);
 }
 
 function postShake() {
   ctx.restore();
 }
 
-function activate_screen_shake(){
+function activate_screen_shake() {
   screen_shake = true;
   setTimeout(function() {
     screen_shake = false;
@@ -301,8 +301,13 @@ players.push(personnages(rel_player_x * 2 + 50, rel_player_y, 8));
 players.push(personnages(rel_player_x * 2, rel_player_y + 35, 9));
 
 var blue_fire_img = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/blue-fire.png");
-var blue_fire_tiles = animated_tilemap(blue_fire_img, 6);
-var blue_fire = animated_sprite(blue_fire_tiles, 0, window_height - blue_fire_img.height * 0.8 - 10, 0.8, 120);
+var blue_fire_tiles = null;
+var blue_fire = null;
+
+setTimeout(function() {
+  blue_fire_tiles = animated_tilemap(blue_fire_img, 6);
+  blue_fire = animated_sprite(blue_fire_tiles, 0, window_height - blue_fire_img.height * 0.8 - 10, 0.8, 120);
+}, 1000);
 
 var ball_img = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/ball.png");
 var ball_animation = "steady";
@@ -311,15 +316,22 @@ var ball_y = rel_player_y + 40;
 var ball_speed = 40;
 
 var ball_fire_img = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/flammes_ball.png");
-var ball_fire_tiles = animated_tilemap(ball_fire_img, 61);
-var ball_fire = animated_sprite(ball_fire_tiles, ball_x, ball_y, 1.5, 20);
+var ball_fire_tiles = null;
+var ball_fire = null;
+
+setTimeout(function() {
+  ball_fire_tiles = animated_tilemap(ball_fire_img, 61);
+  ball_fire = animated_sprite(ball_fire_tiles, ball_x, ball_y, 1.5, 20);
+}, 1000);
+
+
 
 var ecran_loose = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/Ecran_loose.png");
 var ecran_win = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/ecran_win.png");
 
 var shield_img = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/shield.png");
 
-var deck_rectangle = rectangle(blue_fire_tiles.sprite_width * 0.8 + 10, window_height - 50 * 1.62 * 1.5, 50, 50 * 1.62, 10, orange);
+var deck_rectangle = rectangle(130, window_height - 50 * 1.62 * 1.5, 50, 50 * 1.62, 10, orange);
 
 var discard = [];
 var deck = [hissatsu_obj("Ouragan Inazuma", 6, "atk", 15), hissatsu_obj("Triangle de la mort", 4, "atk", 8), hissatsu_obj("Triangle de la mort", 4, "atk", 8), hissatsu_obj("La Terre", 5, "atk", 12), hissatsu_obj("Arrêt céleste", 5, "def", 15), hissatsu_obj("Trou de ver", 4, "def", 10), hissatsu_obj("Trou de ver", 4, "def", 10), hissatsu_obj("Mains de l'infini", 4, "def", 8), hissatsu_obj("Mains de l'infini", 4, "def", 8), hissatsu_obj("Mains de l'infini", 4, "def", 8), hissatsu_obj("Tir spiral", 1, "atk", 1), hissatsu_obj("Tir spiral", 1, "atk", 1), hissatsu_obj("Tir spiral", 1, "atk", 1), hissatsu_obj("Tir spiral", 1, "atk", 1), hissatsu_obj("Tir spiral", 1, "atk", 1), hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Blizzard eternel", 1, "atk", 2), hissatsu_obj("Blizzard eternel", 1, "atk", 2), hissatsu_obj("Blizzard eternel", 1, "atk", 2), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Feu glacé", 4, "atk", 9), hissatsu_obj("Feu glacé", 4, "atk", 9), hissatsu_obj("Feu glacé", 4, "atk", 9), hissatsu_obj("Main celeste", 2, "def", 4), hissatsu_obj("Main celeste", 2, "def", 4), hissatsu_obj("Main celeste", 2, "def", 4), hissatsu_obj("Main Magique", 3, "def", 7), hissatsu_obj("Main Magique", 3, "def", 7), hissatsu_obj("Main Magique", 3, "def", 7)];
@@ -398,7 +410,7 @@ function draw_menu() {
 
   setCanvasFont(font, window_width * 0.02 + "pt", "bold");
   txt_size = ctx.measureText("Jouer");
-  Texte(window_width / 2 - txt_size.width/2, window_height / 2 + 15, "Jouer", "white");
+  Texte(window_width / 2 - txt_size.width / 2, window_height / 2 + 15, "Jouer", "white");
 }
 
 function draw_game() {
@@ -433,7 +445,7 @@ function draw_game() {
   DrawImageObject(ball_img, ball_x, ball_y, 24, 24);
   ball_fire.x = ball_x - 64;
   ball_fire.y = ball_y - 71;
-  
+
   if (ball_animation != "steady") {
     ball_fire.draw();
   }
@@ -552,7 +564,7 @@ function draw_game() {
         ball_x = rel_player_x * 2 - 100;
         ball_animation = "steady";
       }
-    } 
+    }
 
 
     if (enemy_state == "first_wait") {
@@ -597,8 +609,8 @@ function draw_game() {
           }, 1000);
         }
       }
-    } 
-    
+    }
+
 
 
   } else if (game_state == "win") {
@@ -606,9 +618,9 @@ function draw_game() {
     setCanvasFont(font, window_width * 0.03 + "pt", "bold");
     txt_size = ctx.measureText("Vous avez gagné !");
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
-    Texte(window_width / 2 - txt_size.width / 2, window_height*0.08, "Vous avez gagné !", orange);
+    Texte(window_width / 2 - txt_size.width / 2, window_height * 0.08, "Vous avez gagné !", orange);
 
-     if (ball_animation == "line") {
+    if (ball_animation == "line") {
       ball_x = ball_x - ball_speed;
       if (ball_x < rel_player_x + 50) {
         ball_animation = "lob";
@@ -622,17 +634,17 @@ function draw_game() {
         ball_x = rel_player_x * 2 - 100;
         ball_animation = "steady";
       }
-    } 
+    }
 
-  
+
   } else if (game_state == "lose") {
     DrawImageObject(ecran_loose, 0, 0, window_width, window_height);
     setCanvasFont(font, window_width * 0.03 + "pt", "bold");
     txt_size = ctx.measureText("Vous avez perdu !");
     text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
-    Texte(window_width / 2 - txt_size.width / 2, 50, "Vous avez perdu !", orange);
-    
-     if (ball_animation == "line") {
+    Texte(window_width / 2 - txt_size.width / 2, window_height * 0.08, "Vous avez perdu !", orange);
+
+    if (ball_animation == "line") {
       ball_x = ball_x + ball_speed;
       if (ball_x > rel_player_x * 2 - 50) {
         ball_animation = "lob";
@@ -657,10 +669,10 @@ function game() {
     //drawings
     ctx.clearRect(0, 0, window_width, window_height);
 
-    if (screen_shake){
+    if (screen_shake) {
       preShake();
     }
-    
+
 
     if (game_state == "menu") {
       draw_menu();
@@ -695,7 +707,7 @@ function game() {
 
     }
 
-    if (screen_shake){
+    if (screen_shake) {
       postShake();
     }
 
@@ -703,4 +715,9 @@ function game() {
   }, 1000 / 60);
 }
 
-setTimeout(game,2000);
+setTimeout(game, 2000);
+
+setCanvasFont(font, window_width * 0.03 + "pt", "bold");
+txt_size = ctx.measureText("Chargement ...");
+text_height = txt_size.fontBoundingBoxAscent + txt_size.fontBoundingBoxDescent;
+Texte(window_width / 2 - txt_size.width / 2,  window_height / 2 + window_width * 0.03/2, "Chargement ...", "black");
