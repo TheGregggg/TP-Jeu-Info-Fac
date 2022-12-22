@@ -4,20 +4,22 @@
 ##                                             ##
 \*#############################################*/
 
+// initialisation pour DrawImageObject
 turtleEnabled = false;
 Initialiser();
 
 var font = PreloadGooglefont("'Audiowide', cursive");
 var orange = rgb(255, 143, 23);
 
-function preShake() {
+// fonctions liée screen shake
+function pre_shake() {
   ctx.save();
   var dx = Math.random() * 10;
   var dy = Math.random() * 10;
   ctx.translate(dx, dy);
 }
 
-function postShake() {
+function post_shake() {
   ctx.restore();
 }
 
@@ -31,7 +33,7 @@ function activate_screen_shake() {
 // 'POO' définitions
 
 function rectangle(x, y, width, height, radius, color) {
-  var RectanglePleinArrondie = function() {
+  var draw = function() {
     ctx.fillStyle = this.color;
     ctx.beginPath();
     ctx.roundRect(this.x, this.y, this.width, this.height, this.radius);
@@ -54,7 +56,7 @@ function rectangle(x, y, width, height, radius, color) {
     height: height,
     radius: radius,
     color: color,
-    draw: RectanglePleinArrondie,
+    draw: draw,
     collide_with_mouse: collide
   };
   return obj;
@@ -214,6 +216,8 @@ function hissatsu_obj(name, cost, type, effect) {
   return obj;
 }
 
+
+// fonction générique
 function MouseClick(x, y) {
   mouse_clicked = true;
 }
@@ -229,7 +233,7 @@ function shuffleArray(array) {
 
 var hissatsus_atk = [hissatsu_obj("Tempete de feu", 3, "atk", 5), hissatsu_obj("Blizzard eternel", 1, "atk", 2), hissatsu_obj("Tornade du dragon", 3, "atk", 4), hissatsu_obj("Feu glacé", 4, "atk", 9), hissatsu_obj("Blizzard éternel", 3, "atk", 7)];
 
-function create_enemyAttacks() {
+function create_enemy_attacks() {
   enemy_atks = [];
   var nb_atks = Hasard(3) + 1;
   for (i = 0; i < nb_atks; i++) {
@@ -271,8 +275,10 @@ function start_player_round() {
   nb_cards_hand = cards.length;
 }
 
-// variables definitions
+// definitions des variables
 var mouse_clicked = null;
+var txt_size = null;
+var text_height = null;
 
 var game_loop = null;
 var window_height = ctx.canvas.height;
@@ -281,12 +287,12 @@ var rect_fin_jeu = rectangle(
 window_width - 30, window_height - 30, 30, 30, 0, "red");
 
 var game_state = "menu";
-
 var screen_shake = false;
 
 var background_menu = PreloadImage("https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/portals_3/H2x1_CharacterHub_InazumaEleven_image1600w.jpg");
 var rect_play_button = rectangle(
 window_width / 2 - 100, window_height / 2 - 50, 200, 100, 20, rgba(0, 0, 0, 0.2));
+
 
 var background_game = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/background.jpg");
 
@@ -296,6 +302,7 @@ var players_images = PreloadImage("https://raw.githubusercontent.com/TheGregggg/
 var rel_player_x = window_width / 3;
 var rel_player_y = window_height * 1.75 / 3;
 var players = [];
+
 players.push(personnages(rel_player_x, rel_player_y - 35, 1));
 players.push(personnages(rel_player_x - 50, rel_player_y, 2));
 players.push(personnages(rel_player_x + 50, rel_player_y, 3));
@@ -306,6 +313,7 @@ players.push(personnages(rel_player_x * 2 - 50, rel_player_y, 7));
 players.push(personnages(rel_player_x * 2 + 50, rel_player_y, 8));
 players.push(personnages(rel_player_x * 2, rel_player_y + 35, 9));
 
+
 var blue_fire_img = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/blue-fire.png");
 var blue_fire_tiles = null;
 var blue_fire = null;
@@ -314,6 +322,7 @@ setTimeout(function() {
   blue_fire_tiles = animated_tilemap(blue_fire_img, 6);
   blue_fire = animated_sprite(blue_fire_tiles, 0, window_height - blue_fire_img.height * 0.8 - 10, 0.8, 120);
 }, 1000);
+
 
 var ball_img = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/ball.png");
 var ball_animation = "steady";
@@ -329,7 +338,6 @@ setTimeout(function() {
   ball_fire_tiles = animated_tilemap(ball_fire_img, 61);
   ball_fire = animated_sprite(ball_fire_tiles, ball_x, ball_y, 1.5, 20);
 }, 1000);
-
 
 
 var ecran_loose = PreloadImage("https://raw.githubusercontent.com/TheGregggg/TP-Jeu-Info-Fac/main/Ecran_loose.png");
@@ -381,7 +389,7 @@ var deselect_time = 100;
 var can_deselect = false;
 
 
-// Game variables defintions
+// Definition des variables lié au jeu
 var health = 40;
 var max_health = 40;
 var hissatsu = 5;
@@ -402,14 +410,13 @@ var enemy_state = "do_atk";
 var enemy_health_bar = rectangle(rel_player_x * 2 + 18 - window_width * 0.05 / 2, rel_player_y - 55, window_width * 0.05 * (enemy_health / max_enemy_health), window_width * 0.005, window_width * 0.001, "red");
 var enemy_health_bar_complete = rectangle(rel_player_x * 2 + 18 - window_width * 0.05 / 2 - health_bar_outline, rel_player_y - 55 - health_bar_outline, window_width * 0.05 + health_bar_outline * 2, window_width * 0.005 + health_bar_outline * 2, window_width * 0.001, "black");
 
-var txt_size = null;
-var text_height = null;
 
 function draw_menu() {
   DrawImageObject(background_menu, 0, 0, window_width, window_height);
 
   rect_play_button.color = rgba(0, 0, 0, 0.2);
   if (rect_play_button.collide_with_mouse()) {
+    // si la souris est sur le rectangle, change sa couleur
     rect_play_button.color = rgba(0, 0, 0, 0.4);
   }
   rect_play_button.draw();
@@ -668,15 +675,14 @@ function draw_game() {
   }
 }
 
-// main loop
-
+// fonction qui lance la boucle principal
 function game() {
   game_loop = setInterval(function() {
     //drawings
     ctx.clearRect(0, 0, window_width, window_height);
 
     if (screen_shake) {
-      preShake();
+      pre_shake();
     }
 
 
@@ -693,7 +699,7 @@ function game() {
       //interactions
       if (rect_end_turn_button.collide_with_mouse() && mouse_clicked && game_state == "player_turn") {
         game_state = "enemy_turn";
-        create_enemyAttacks();
+        create_enemy_attacks();
         enemy_state = "first_wait";
         ball_x = rel_player_x * 2 - 100;
       }
@@ -714,7 +720,7 @@ function game() {
     }
 
     if (screen_shake) {
-      postShake();
+      post_shake();
     }
 
     mouse_clicked = false;
