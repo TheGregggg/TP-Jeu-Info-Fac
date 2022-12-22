@@ -440,7 +440,7 @@ function draw_game() {
 
   deck_rectangle.draw();
   setCanvasFont(font, window_width * 0.01 + "pt", "bold");
-  Texte(blue_fire_tiles.sprite_width * 0.8 + 20, window_height - 70, deck.length, 'white');
+  Texte(135, window_height - 70, deck.length, 'white');
 
   health_bar_complete.draw();
   health_bar.draw();
